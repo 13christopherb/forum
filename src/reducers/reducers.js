@@ -1,6 +1,7 @@
+import { combineReducers } from 'redux';
 import {
     ADD_POST, GET_POSTS
-} from "../actions/index";
+} from "../actions/actions";
 
 const initialState = {
     posts: []
@@ -14,7 +15,7 @@ function posts(state=initialState, action) {
         case ADD_POST:
             return {
                 ...state,
-                ['posts']: [posts].push(action.post)
+                ['posts']: ['posts'].push(action.post)
             }
         case GET_POSTS:
             return {
@@ -26,4 +27,6 @@ function posts(state=initialState, action) {
     }
 }
 
-export default posts
+export default combineReducers({
+    posts,
+});

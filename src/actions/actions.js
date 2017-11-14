@@ -17,7 +17,7 @@ export function addPost ({ id, timestamp, title,
     }
 }
 
-export function getPosts (posts) {
+export function gotPosts (posts) {
     return {
         type: GET_POSTS,
         posts: posts
