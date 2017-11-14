@@ -1,5 +1,7 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux'
 import $ from "jquery"
+import { getPosts } from './actions'
 
 class Posts extends React.Component {
 
@@ -11,7 +13,7 @@ class Posts extends React.Component {
             contentType: 'json',
             headers: { 'Authorization': 'whatever-you-want' }
         }).then(posts => {
-            console.log(posts);
+            this.props.dispatch(getPosts(posts));
         });
     }
 
@@ -22,4 +24,13 @@ class Posts extends React.Component {
     }
 }
 
-export default Posts;
+function mapStateToProps ({ posts }) {
+    return {
+        posts: posts
+    }
+}
+
+
+export default connect(
+    mapStateToProps,
+)(Posts)

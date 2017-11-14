@@ -1,8 +1,12 @@
 import {
-    ADD_POST
+    ADD_POST, GET_POSTS
 } from "../actions/index";
 
-function post(state={}, action) {
+const initialState = {
+    posts: []
+}
+
+function posts(state=initialState, action) {
     const { id, timestamp, title,
         body, author, category, voteScore, deleted} = action;
 
@@ -10,9 +14,16 @@ function post(state={}, action) {
         case ADD_POST:
             return {
                 ...state,
-                [posts]: [posts].push(action.post)
+                ['posts']: [posts].push(action.post)
+            }
+        case GET_POSTS:
+            return {
+                ...state,
+                ['posts']: action.posts
             }
         default:
             return state
     }
 }
+
+export default posts
