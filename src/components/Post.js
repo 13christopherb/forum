@@ -1,31 +1,28 @@
-import React, { Component } from "react";
-import { connect } from 'react-redux';
-import _ from 'underscore';
+import React, {Component} from "react";
+import {connect} from 'react-redux';
 
 class Post extends React.Component {
+
+    state = {
+        post: {}
+    }
+
+    componentDidMount() {
+        console.log(this.props)
+        fetch('http://localhost:3001/posts/' + this.props.match.params.id, {
+            headers: {Authorization: 'whatever-you-want'}
+        }).then(res => res.json())
+            .then(data => {
+                    this.setState({post: data});
+                }
+            );
+    }
+
     render() {
-        return(
-            <div>{this.props.body}</div>
+        return (
+            <div>{this.state.post.body}</div>
         )
     }
 }
 
-function mapStateToProps ({ posts }, ownProps) {
-    let post = _.find(posts.posts, (p) => {
-        return p.id === ownProps.id
-    });
-
-    return {
-        id: post.id,
-        title: post.title,
-        body: post.body,
-        author: post.author,
-        category: post.category,
-        voteScore: post.voteScore,
-        deleted: post.deleted
-    }
-}
-
-export default connect(
-    mapStateToProps,
-)(Post)
+export default connect()(Post)

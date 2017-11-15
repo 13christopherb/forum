@@ -2,9 +2,8 @@ import React, {Component} from "react";
 import {Link} from 'react-router-dom';
 import _ from "underscore"
 import {connect} from 'react-redux'
-import $ from "jquery"
 import {gotPosts} from '../actions/actions'
-import Post from './Post.js'
+import PostTitle from './PostTitle.js'
 
 class Posts extends React.Component {
 
@@ -26,7 +25,8 @@ class Posts extends React.Component {
     render() {
         let posts = [];
         _.each(this.props.posts, (post) => {
-            posts.push(<Post key={post.id} id={post.id}/>);
+            posts.push(<PostTitle key={post.id} id={post.id} title={post.title} author={post.author}
+                                  timestamp={post.timestamp}/>);
         });
         return (
             <div>
