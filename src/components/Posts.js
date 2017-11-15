@@ -14,20 +14,26 @@ class Posts extends React.Component {
     }
 
     componentDidMount() {
+        /*
         $.ajax({
             type: 'GET',
             url: 'http://localhost:3001/posts',
             dataType: 'json',
             contentType: 'json',
             headers: { 'Authorization': 'foo' }
-        }).then(posts => {
-            this.props.dispatch(gotPosts(posts));
-        });
+        })*/fetch('http://localhost:3001/posts', {
+            headers: { Authorization: 'whatever-you-want' }
+        }).then(res => res.json())
+            .then(data => {
+                this.props.dispatch(gotPosts(data));
+            }
+            );
     }
 
     render() {
         let posts = [];
         _.each(this.props.posts, (post) => {
+            console.log(post);
             posts.push(<Post key={post.id} id={post.id}/>);
         });
         return(
