@@ -7,6 +7,7 @@ const initialState = {
     posts: []
 }
 
+
 function posts(state=initialState, action) {
     const { id, timestamp, title,
         body, author, category, voteScore, deleted} = action;

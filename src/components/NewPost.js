@@ -1,13 +1,14 @@
-import React, { Component } from "react";
-import { connect } from 'react-redux';
-import $ from "jquery"
+import React, {Component} from "react";
+import {connect} from 'react-redux';
+import {Route, Redirect} from 'react-router'
 import uuidv4 from 'uuid'
-import { addPost } from '../actions/actions'
+import {addPost} from '../actions/actions'
 
 class NewPost extends React.Component {
 
     state = {
-        value: {}
+        value: {},
+        created: false
     };
 
     handleInputChange = (e) => {
@@ -36,43 +37,45 @@ class NewPost extends React.Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(post)
-        })
-        /*
-        $.ajax({
-            type: 'POST',
-            url: 'http://localhost:3001/posts',
-            data: JSON.stringify(post),
-            headers: { 'Authorization': 'key',
-                'Content-Type': 'application/json'}
         }).then(() => {
             this.props.dispatch(addPost(post));
-        });*/
+            this.setState({
+                created: true,
+                id: post.id
+            });
+        });
     }
 
     render() {
-        return(
+        return (
             <div>
-                <form onSubmit={this.handleSubmit}>
-                    <label>
-                        Title
-                        <input
-                            name="title"
-                            onChange={this.handleInputChange}></input>
-                    </label>
-                    <label>
-                        Author
-                        <input
-                            name="author"
-                            onChange={this.handleInputChange}></input>
-                    </label>
-                    <label>
-                        Body
-                        <textarea
-                            name="body"
-                            value={this.state.body} onChange={this.handleInputChange}></textarea>
-                    </label>
-                    <button type="submit">Submit</button>
-                </form>
+                <Route exact path="/new" render={() => (
+                    this.state.created ? (
+                        <Redirect to={'/posts/' + this.state.id}/>
+                    ) : <div>
+                        <form onSubmit={this.handleSubmit}>
+                            <label>
+                                Title
+                                <input
+                                    name="title"
+                                    onChange={this.handleInputChange}></input>
+                            </label>
+                            <label>
+                                Author
+                                <input
+                                    name="author"
+                                    onChange={this.handleInputChange}></input>
+                            </label>
+                            <label>
+                                Body
+                                <textarea
+                                    name="body"
+                                    value={this.state.body} onChange={this.handleInputChange}></textarea>
+                            </label>
+                            <button type="submit">Submit</button>
+                        </form>
+                    </div>
+                )}/>
             </div>
         )
     }
