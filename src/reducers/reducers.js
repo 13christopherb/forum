@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
+import _ from 'underscore';
 import {
-    ADD_POST, GET_POSTS
+    ADD_POST, DELETE_POST, GOT_POSTS
 } from "../actions/actions";
 
 const initialState = {
@@ -18,10 +19,17 @@ function posts(state=initialState, action) {
                 ...state,
                 ['posts']: ['posts'].push(action.post)
             }
-        case GET_POSTS:
+        case GOT_POSTS:
             return {
                 ...state,
                 ['posts']: action.posts
+            }
+        case DELETE_POST:
+            return {
+                ...state,
+                ['posts']: _.reject(['posts'], (p) => {
+                    return action.post.id === p.id;
+                })
             }
         default:
             return state

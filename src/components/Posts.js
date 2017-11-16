@@ -2,8 +2,11 @@ import React, {Component} from "react";
 import {Link} from 'react-router-dom';
 import _ from "underscore"
 import {connect} from 'react-redux'
-import {gotPosts} from '../actions/actions'
+import {gotPosts, deletePost} from '../actions/actions'
 import PostTitle from './PostTitle.js'
+import * as ForumAPI from '../utils/ForumAPI.js'
+import "bootstrap/dist/css/bootstrap.css";
+import Header from './Header.js';
 
 class Posts extends React.Component {
 
@@ -13,28 +16,31 @@ class Posts extends React.Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:3001/posts', {
-            headers: {Authorization: 'whatever-you-want'}
-        }).then(res => res.json())
-            .then(data => {
+            ForumAPI.getAllPosts().then(data => {
                     this.props.dispatch(gotPosts(data));
                 }
             );
     }
 
+    deletePost = (post) => {
+        ForumAPI.deletePost(post.props.id)
+        this.props.dispatch(deletePost(post));
+    }
+
     render() {
         let posts = [];
         _.each(this.props.posts, (post) => {
+            console.log(post);
             posts.push(<PostTitle key={post.id} id={post.id} title={post.title} author={post.author}
-                                  timestamp={post.timestamp}/>);
+                                  timestamp={post.timestamp} deletePost={this.deletePost}/>);
         });
         return (
             <div>
-                <Link
-                    to="/new"
-                    className="btn"
-                >New Post</Link>
-                {posts}
+                <table className="table table-striped">
+                    <tbody>
+                        {posts}
+                    </tbody>
+                </table>
             </div>
         )
     }

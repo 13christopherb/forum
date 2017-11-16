@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {connect} from 'react-redux';
+import * as ForumAPI from '../utils/ForumAPI.js'
 
 class Post extends React.Component {
 
@@ -8,14 +9,10 @@ class Post extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props)
-        fetch('http://localhost:3001/posts/' + this.props.match.params.id, {
-            headers: {Authorization: 'whatever-you-want'}
-        }).then(res => res.json())
-            .then(data => {
-                    this.setState({post: data});
-                }
-            );
+        ForumAPI.getPost(this.props.match.params.id).then(data => {
+                this.setState({post: data});
+            }
+        );
     }
 
     render() {

@@ -1,10 +1,9 @@
 export const ADD_POST = 'ADD_POST'
-export const GET_POSTS = 'GET_POST'
+export const GOT_POSTS = 'GET_POST'
 export const DELETE_POST = 'DELETE_POST'
 
 export function addPost ({ id, timestamp, title,
                              body, author, category }) {
-    console.log(id);
     return {
         type: ADD_POST,
         post: {id,
@@ -20,7 +19,14 @@ export function addPost ({ id, timestamp, title,
 
 export function gotPosts (posts) {
     return {
-        type: GET_POSTS,
+        type: GOT_POSTS,
         posts: posts
+    }
+}
+
+export function deletePost (post) {
+    return {
+        type: DELETE_POST,
+        post: post
     }
 }

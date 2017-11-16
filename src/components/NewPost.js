@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {Route, Redirect} from 'react-router'
 import uuidv4 from 'uuid'
 import {addPost} from '../actions/actions'
+import * as ForumAPI from '../utils/ForumAPI.js'
 
 class NewPost extends React.Component {
 
@@ -30,14 +31,7 @@ class NewPost extends React.Component {
             author: this.state['author'],
             category: 'react'
         };
-        fetch(`http://localhost:3001/posts`, {
-            method: 'POST',
-            headers: {
-                Authorization: 'whatever-you-want',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(post)
-        }).then(() => {
+        ForumAPI.addPost(post).then(() => {
             this.props.dispatch(addPost(post));
             this.setState({
                 created: true,
