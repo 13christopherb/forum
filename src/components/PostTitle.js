@@ -12,7 +12,6 @@ class PostTitle extends React.Component {
                 <td>
                     <Link
                         to={"/posts/" + this.props.id}
-                        className="btn"
                     >{this.props.title}</Link>
                 </td>
                 <td>

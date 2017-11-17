@@ -24,10 +24,38 @@ export const addPost = (post) =>
     })
 
 export const deletePost = (id) => {
-    console.log(id);
     fetch(api + `/posts/` + id, {
         method: 'DELETE',
         headers: headers
     })
 }
 
+/**
+ * Updates an existing post
+ * @param post The updated post
+ */
+export const editPost = (post) => {
+    fetch(api + '/posts/' + post.id, {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify({
+            title: post.title,
+            body: post.body
+        })
+    })
+}
+
+/**
+ * Updates the vote count on the vote
+ * @param post The post to be voted on
+ * @param vote Either 'upVote' or 'downVote'
+ */
+export const voteOnPost = (post, vote) => {
+    fetch(api + '/posts/' + post.id, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+            option: vote
+        })
+    })
+}

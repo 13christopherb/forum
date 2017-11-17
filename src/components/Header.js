@@ -6,7 +6,7 @@ class Header extends React.Component {
     render() {
         return (
             <div>
-                <Link className="btn btn-primary" to="/new">Create post</Link>
+                <Link to="/">Forum</Link>
             </div>
         )
     }

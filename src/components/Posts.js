@@ -16,10 +16,10 @@ class Posts extends React.Component {
     }
 
     componentDidMount() {
-            ForumAPI.getAllPosts().then(data => {
-                    this.props.dispatch(gotPosts(data));
-                }
-            );
+        ForumAPI.getAllPosts().then(data => {
+                this.props.dispatch(gotPosts(data));
+            }
+        );
     }
 
     deletePost = (post) => {
@@ -36,11 +36,20 @@ class Posts extends React.Component {
         });
         return (
             <div>
-                <table className="table table-striped">
-                    <tbody>
-                        {posts}
-                    </tbody>
-                </table>
+                <div className="row">
+                    <div className="col-md-3 offset-md-9">
+                        <Link className="btn btn-primary" to="/new">Create post</Link>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <table className="table table-striped">
+                            <tbody>
+                                {posts}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         )
     }

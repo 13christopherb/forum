@@ -12,6 +12,11 @@ class NewPost extends React.Component {
         created: false
     };
 
+    /**
+     * Saves the input values to the state to submit later
+     * when button is pressed
+     * @param e Input change event
+     */
     handleInputChange = (e) => {
         const target = e.target;
         const value = target.value;
@@ -21,6 +26,11 @@ class NewPost extends React.Component {
         });
     }
 
+    /**
+     * Posts the input values saved in the state
+     * to the server.
+     * @param e On click event
+     */
     handleSubmit = (e) => {
         e.preventDefault();
         const post = {
