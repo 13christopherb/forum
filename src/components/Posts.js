@@ -31,8 +31,7 @@ class Posts extends React.Component {
         let posts = [];
         _.each(this.props.posts, (post) => {
             console.log(post);
-            posts.push(<PostTitle key={post.id} id={post.id} title={post.title} author={post.author}
-                                  timestamp={post.timestamp} deletePost={this.deletePost}/>);
+            posts.push(<PostTitle post={post} key={post.id} deletePost={this.deletePost}/>);
         });
         return (
             <div>

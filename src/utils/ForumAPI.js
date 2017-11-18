@@ -21,13 +21,13 @@ export const addPost = (post) =>
         method: 'POST',
         headers: headers,
         body: JSON.stringify(post)
-    })
+    }).then(res => res.json())
 
 export const deletePost = (id) => {
     fetch(api + `/posts/` + id, {
         method: 'DELETE',
         headers: headers
-    })
+    }).then(res => res.json())
 }
 
 /**
@@ -42,7 +42,7 @@ export const editPost = (post) => {
             title: post.title,
             body: post.body
         })
-    })
+    }).then(res => res.json())
 }
 
 /**
@@ -57,5 +57,5 @@ export const voteOnPost = (post, vote) => {
         body: JSON.stringify({
             option: vote
         })
-    })
+    }).then(res => res.json())
 }

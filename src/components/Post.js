@@ -84,6 +84,9 @@ class Post extends React.Component {
                             </article>
                         </div>
                     </section>
+                    <section className="row">
+                        <div className="col-md-6"></div>
+                    </section>
                 </div>) : (
                     <form onSubmit={this.handleSubmit}>
                         <label>
