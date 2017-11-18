@@ -1,13 +1,16 @@
 import React, {Component} from "react";
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {editPost} from '../actions/actions'
-import * as ForumAPI from '../utils/ForumAPI.js'
+import uuidv4 from 'uuid';
+import {editPost} from '../actions/actions';
+import * as ForumAPI from '../utils/ForumAPI.js';
+import Comment from './Comment.js';
 
 class Post extends React.Component {
 
     state = {
         post: {},
+        comments: [],
         title: '',
         body: '',
         editing: false
@@ -22,10 +25,24 @@ class Post extends React.Component {
                 });
             }
         );
+        ForumAPI.getCommentsFromPost(this.props.match.params.id).then(data => {
+           this.setState({
+              comments: data
+           });
+        });
     }
 
     editPost = (e) => {
         this.setState({editing: !this.state.editing})
+    }
+
+    handleCommentChange = (e) => {
+        const target = e.target;
+        const value = target.value;
+        const name = target.name;
+        this.setState({
+            [name]: value
+        })
     }
 
     /**
@@ -40,6 +57,24 @@ class Post extends React.Component {
         this.setState({
             [name]: value
         });
+    }
+
+    handleCommentSubmit = (e) => {
+        e.preventDefault();
+        const comment = {
+            id: uuidv4(),
+            author: this.state.commentAuthor,
+            body: this.state.commentBody,
+            parentId: this.state.post.id,
+        };
+        ForumAPI.addComment(comment);
+        let comments = [...this.state.comments];
+        comments.push(comment);
+        this.setState({
+            comments: comments,
+            commentAuthor: '',
+            commentBody: '',
+        })
     }
 
     /**
@@ -64,6 +99,10 @@ class Post extends React.Component {
     }
 
     render() {
+        let comments = [];
+        for (var comment of this.state.comments){
+            comments.push(<Comment key={comment.id} author={comment.author} body={comment.body} id={comment.id}/>)
+        }
         return (
             <div>
                 {!this.state.editing ? (
@@ -106,6 +145,28 @@ class Post extends React.Component {
                     </form>
 
                 )}
+                <section className="row">
+                    <div className="col-md-12">
+                        <form onSubmit={this.handleCommentSubmit}>
+                            <label>
+                                Comment
+                                <textarea
+                                    name="commentBody"
+                                    value={this.state.commentBody}
+                                    onChange={this.handleCommentChange}></textarea>
+                            </label>
+                            <label>
+                                Author
+                                <input
+                                    name="commentAuthor"
+                                    value={this.state.commentAuthor}
+                                    onChange={this.handleCommentChange} />
+                            </label>
+                            <button type="submit">Submit</button>
+                        </form>
+                    </div>
+                </section>
+                <section>{comments}</section>
             </div>
         )
     }

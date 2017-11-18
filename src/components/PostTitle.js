@@ -27,29 +27,29 @@ class PostTitle extends React.Component {
         let voteValue = this.state.voteValue;
 
         if (vote === 'upVote') {
-            if (this.state.voteValue === 1) {
+            if (this.state.voteValue === 1) {       //If the user has already upvoted the post
                 delVoteScore = -1;
                 voteResult = 'downVote';
                 voteValue = 0;
-            } else if (this.state.voteValue === 0){
+            } else if (this.state.voteValue === 0){ //If the user hasn't voted on this post
                 delVoteScore = 1;
                 voteResult = 'upVote';
                 voteValue = 1;
-            } else {
+            } else {                                //If the user has downvoted this post
                 delVoteScore = 2;
                 voteResult = 'upVote';
                 voteValue = 1;
             }
         } else {
-            if (this.state.voteValue === -1) {
+            if (this.state.voteValue === -1) {      //If the user has downvoted the post
                 delVoteScore = 1;
                 voteResult = 'upVote';
                 voteValue = 0;
-            } else if (this.state.voteValue === 0){
+            } else if (this.state.voteValue === 0){ //If the user hasn't voted on this post
                 delVoteScore = -1;
                 voteResult = 'downVote';
                 voteValue = -1;
-            } else {
+            } else {                                //If the user has upvoted this post
                 delVoteScore = -2;
                 voteResult = 'downVote';
                 voteValue = -1;
