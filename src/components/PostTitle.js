@@ -35,13 +35,13 @@ class PostTitle extends React.Component {
                 delVoteScore = 1;
                 voteResult = 'upVote';
                 voteValue = 1;
-            } else {                                //If the user has downvoted this post
+            } else {                                //If the user has already downvoted this post
                 delVoteScore = 2;
                 voteResult = 'upVote';
                 voteValue = 1;
             }
         } else {
-            if (this.state.voteValue === -1) {      //If the user has downvoted the post
+            if (this.state.voteValue === -1) {      //If the user has already downvoted the post
                 delVoteScore = 1;
                 voteResult = 'upVote';
                 voteValue = 0;
@@ -49,7 +49,7 @@ class PostTitle extends React.Component {
                 delVoteScore = -1;
                 voteResult = 'downVote';
                 voteValue = -1;
-            } else {                                //If the user has upvoted this post
+            } else {                                //If the user has alread upvoted this post
                 delVoteScore = -2;
                 voteResult = 'downVote';
                 voteValue = -1;

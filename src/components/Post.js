@@ -5,6 +5,7 @@ import uuidv4 from 'uuid';
 import {editPost} from '../actions/actions';
 import * as ForumAPI from '../utils/ForumAPI.js';
 import Comment from './Comment.js';
+import EditPost from './EditPost.js';
 
 class Post extends React.Component {
 
@@ -32,7 +33,7 @@ class Post extends React.Component {
         });
     }
 
-    editPost = (e) => {
+    editingPost = (e) => {
         this.setState({editing: !this.state.editing})
     }
 
@@ -43,20 +44,6 @@ class Post extends React.Component {
         this.setState({
             [name]: value
         })
-    }
-
-    /**
-     * Saves the input values to the state to submit later
-     * when button is pressed
-     * @param e Input change event
-     */
-    handleInputChange = (e) => {
-        const target = e.target;
-        const value = target.value;
-        const name = target.name;
-        this.setState({
-            [name]: value
-        });
     }
 
     handleCommentSubmit = (e) => {
@@ -82,13 +69,7 @@ class Post extends React.Component {
      * to the server.
      * @param e On click event
      */
-    handleSubmit = (e) => {
-        e.preventDefault();
-        const post = {
-            ...this.state.post,
-            ['title']: this.state.title,
-            ['body']: this.state.body
-        }
+    editPost = (post) => {
         ForumAPI.addPost(post).then(() => {
             this.props.dispatch(editPost(post));
             this.setState({
@@ -113,7 +94,7 @@ class Post extends React.Component {
                             <p><Link to={'/u/' + this.state.post.author}>{this.state.post.author}</Link></p>
                         </div>
                         <div className="col-md-3 offset-md-4">
-                            <button onClick={this.editPost} className="btn btn-primary">Edit post</button>
+                            <button onClick={this.editingPost} className="btn btn-primary">Edit post</button>
                         </div>
                     </section>
                     <section className="row">
@@ -126,46 +107,33 @@ class Post extends React.Component {
                     <section className="row">
                         <div className="col-md-6"></div>
                     </section>
+                    <section className="row">
+                        <div className="col-md-12">
+                            <form onSubmit={this.handleCommentSubmit}>
+                                <label>
+                                    Comment
+                                    <textarea
+                                        name="commentBody"
+                                        value={this.state.commentBody}
+                                        onChange={this.handleCommentChange}></textarea>
+                                </label>
+                                <label>
+                                    Author
+                                    <input
+                                        name="commentAuthor"
+                                        value={this.state.commentAuthor}
+                                        onChange={this.handleCommentChange} />
+                                </label>
+                                <button type="submit">Submit</button>
+                            </form>
+                        </div>
+                    </section>
                 </div>) : (
-                    <form onSubmit={this.handleSubmit}>
-                        <label>
-                            Title
-                            <input
-                                name="title"
-                                value={this.state.title}
-                                onChange={this.handleInputChange}></input>
-                        </label>
-                        <label>
-                            Body
-                            <textarea
-                                name="body"
-                                value={this.state.body} onChange={this.handleInputChange}></textarea>
-                        </label>
-                        <button type="submit">Submit</button>
-                    </form>
+                    <div>
+                        <EditPost editPost={this.editPost} body={this.state.body} title={this.state.title} />
+                    </div>
 
                 )}
-                <section className="row">
-                    <div className="col-md-12">
-                        <form onSubmit={this.handleCommentSubmit}>
-                            <label>
-                                Comment
-                                <textarea
-                                    name="commentBody"
-                                    value={this.state.commentBody}
-                                    onChange={this.handleCommentChange}></textarea>
-                            </label>
-                            <label>
-                                Author
-                                <input
-                                    name="commentAuthor"
-                                    value={this.state.commentAuthor}
-                                    onChange={this.handleCommentChange} />
-                            </label>
-                            <button type="submit">Submit</button>
-                        </form>
-                    </div>
-                </section>
                 <section>{comments}</section>
             </div>
         )
