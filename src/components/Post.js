@@ -7,15 +7,17 @@ import {addComment, editPost, gotPosts, gotComments} from '../actions/actions';
 import * as ForumAPI from '../utils/ForumAPI.js';
 import Comment from './Comment.js';
 import EditPost from './EditPost.js';
+import VoteDisplay from './VoteDisplay.js';
 
 class Post extends React.Component {
 
     state = {
         post: {},
         comments: [],
-        title: '',
-        body: '',
-        editing: false
+        commentAuthor: '',
+        commentBody: '',
+        editing: false,
+        voteValue: 0
     }
 
     componentDidMount() {
@@ -49,7 +51,7 @@ class Post extends React.Component {
             id: uuidv4(),
             author: this.state.commentAuthor,
             body: this.state.commentBody,
-            parentId: this.state.post.id,
+            parentId: this.props.post.id,
         };
         ForumAPI.addComment(comment);
         this.props.dispatch(addComment(comment));
@@ -75,7 +77,7 @@ class Post extends React.Component {
     render() {
         let comments = [];
         for (var comment of this.props.comments) {
-            comments.push(<Comment key={comment.id} author={comment.author} body={comment.body} id={comment.id}/>)
+            comments.push(<Comment key={comment.id} comment={comment}/>)
         }
             return (
                 <div>
@@ -83,7 +85,8 @@ class Post extends React.Component {
                         <div>
                             <section className="row">
                                 <div className="col-md-5">
-                                    <h3>{this.props.title}</h3>
+                                    <VoteDisplay post={this.props.post} type="post" />
+                                    <h2>{this.props.post.title}</h2>
                                     <p><Link to={'/u/' + this.props.post.author}>{this.props.post.author}</Link></p>
                                 </div>
                                 <div className="col-md-3 offset-md-4">
@@ -134,7 +137,6 @@ class Post extends React.Component {
 }
 
 function mapStateToProps({posts, comments}, ownProps) {
-    console.log(comments);
     let post =_.find(posts.posts, (p) => {
        return p.id === ownProps.match.params.id
     });

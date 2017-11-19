@@ -1,14 +1,14 @@
 import React, {Component} from "react";
-import {Link} from 'react-router-dom';
-import {connect} from 'react-redux';
+import VoteButton from './VoteButton.js';
 import * as ForumAPI from '../utils/ForumAPI.js';
-import {editPost} from '../actions/actions'
-import VoteDisplay from './VoteDisplay.js';
+import {connect} from 'react-redux'
+import {editPost, editComment} from '../actions/actions'
 
-class PostTitle extends React.Component {
+class VoteDisplay extends React.Component {
 
-    deletePost = () => {
-        this.props.deletePost(this);
+    state = {
+        voteScore: this.props.post.voteScore,
+        voteValue: 0
     }
 
     /**
@@ -53,41 +53,36 @@ class PostTitle extends React.Component {
         }
 
         for (let i = 0; i < Math.abs(delVoteScore); i++) {
-            ForumAPI.voteOnPost(this.props.post, voteResult);
+            if (this.props.type==='post') {
+                ForumAPI.voteOnPost(this.props.post, voteResult);
+            } else if (this.props.type==='comment') {
+                ForumAPI.voteOnComment(this.props.post, voteResult);
+            }
         }
 
-        this.props.dispatch(editPost(this.props.post));
+        var post = {...this.props.post};
+        post['voteScore'] = this.props.post.voteScore + delVoteScore
+
+        if (this.props.type==='post') {
+            this.props.dispatch(editPost(post));
+        } else if (this.props.type==='comment') {
+            this.props.dispatch(editComment(post));
+        }
 
         this.setState({
-            voteScore: this.state.voteScore + delVoteScore,
             voteValue: voteValue
         })
     }
 
     render() {
         return (
-            <tr key={this.props.post.id}>
-                <td>
-                    <VoteDisplay post={this.props.post} type="post" />
-                </td>
-                <td>
-                    <Link
-                        to={"/posts/" + this.props.post.id}
-                    >{this.props.post.title}</Link>
-                </td>
-                <td>
-                    <Link
-                        to={"/u/" + this.props.post.author}
-                    >{this.props.post.author}</Link>
-                </td>
-                <td>
-                    <button className="btn btn-danger" onClick={this.deletePost}>
-                        <i className="fa fa-trash"/> Delete
-                    </button>
-                </td>
-            </tr>
+            <div>
+                <VoteButton value="upVote" type={this.props.type} voteValue={this.state.voteValue} handleVote={this.handleVote}/>
+                {this.props.post.voteScore}
+                <VoteButton value="downVote" type={this.props.type} voteValue={this.state.voteValue} handleVote={this.handleVote}/>
+            </div>
         )
     }
 }
 
-export default connect()(PostTitle)
+export default connect()(VoteDisplay)

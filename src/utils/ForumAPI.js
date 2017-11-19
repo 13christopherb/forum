@@ -65,9 +65,25 @@ export const getCommentsFromPost = (id) =>
     ).then(res => res.json())
 
 export const addComment = (comment) => {
+    console.log(comment);
     fetch(api + `/comments`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(comment)
+    }).then(res => res.json())
+}
+
+/**
+ * Updates the vote count on the comment
+ * @param post The comment to be voted on
+ * @param vote Either 'upVote' or 'downVote'
+ */
+export const voteOnComment = (comment, vote) => {
+    fetch(api + '/comments/' + comment.id, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+            option: vote
+        })
     }).then(res => res.json())
 }

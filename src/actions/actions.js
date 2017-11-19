@@ -5,6 +5,7 @@ export const EDIT_POST = 'EDIT_POST'
 export const DELETE_POST = 'DELETE_POST'
 export const ADD_COMMENT = 'ADD_COMMENT'
 export const GOT_COMMENTS = 'GOT_COMMENTS'
+export const EDIT_COMMENT = 'EDIT_COMMENT'
 
 export function addPost ({ id, timestamp, title,
                              body, author, category }) {
@@ -60,5 +61,12 @@ export function gotComments(comments) {
     return {
         type: GOT_COMMENTS,
         comments: comments
+    }
+}
+
+export function editComment (comment) {
+    return {
+        type: EDIT_COMMENT,
+        comment: comment
     }
 }
