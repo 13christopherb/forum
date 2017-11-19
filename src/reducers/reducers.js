@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import _ from 'underscore';
 import {
-    ADD_POST, DELETE_POST, GOT_POSTS, EDIT_POST, ADD_COMMENT,
+    ADD_POST, DELETE_POST, GOT_POSTS, GOT_POST, EDIT_POST, ADD_COMMENT,
     GOT_COMMENTS
 } from "../actions/actions";
 
@@ -26,19 +26,31 @@ function posts(state=initialState, action) {
                 ...state,
                 ['posts']: action.posts
             }
-        case EDIT_POST:
+        case GOT_POST:
             let newState = {...state};
             newState['posts'] = _.reject(newState['posts'], (p) => {
                 return action.post.id === p.id;
             });
             newState['posts'].push(action.post);
             return {
+                ...state,
                 state: newState
+            }
+        case EDIT_POST:
+            var posts = [...state['posts']];
+            for (var post in posts){
+                if (post.id === action.post.id) {
+                    post = action.post;
+                }
+            }
+            return {
+                ...state,
+                ['posts']: posts
             }
         case DELETE_POST:
             return {
                 ...state,
-                ['posts']: _.reject(['posts'], (p) => {
+                ['posts']: _.reject(state['posts'], (p) => {
                     return action.post.id === p.id;
                 })
             }
@@ -66,4 +78,5 @@ function comments(state=initialState, action) {
 
 export default combineReducers({
     posts,
+    comments
 });

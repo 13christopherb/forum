@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import VoteButton from './VoteButton.js';
 import * as ForumAPI from '../utils/ForumAPI.js';
+import {editPost} from '../actions/actions'
 
 class PostTitle extends React.Component {
 
@@ -59,6 +60,8 @@ class PostTitle extends React.Component {
         for (let i = 0; i < Math.abs(delVoteScore); i++) {
             ForumAPI.voteOnPost(this.props.post, voteResult);
         }
+
+        this.props.dispatch(editPost(this.props.post));
 
         this.setState({
             voteScore: this.state.voteScore + delVoteScore,

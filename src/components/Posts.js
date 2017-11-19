@@ -23,14 +23,13 @@ class Posts extends React.Component {
     }
 
     deletePost = (post) => {
-        ForumAPI.deletePost(post.props.id)
-        this.props.dispatch(deletePost(post));
+        ForumAPI.deletePost(post.props.post.id)
+        this.props.dispatch(deletePost(post.props.post));
     }
 
     render() {
         let posts = [];
         _.each(this.props.posts, (post) => {
-            console.log(post);
             posts.push(<PostTitle post={post} key={post.id} deletePost={this.deletePost}/>);
         });
         return (

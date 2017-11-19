@@ -1,5 +1,6 @@
 export const ADD_POST = 'ADD_POST'
-export const GOT_POSTS = 'GET_POST'
+export const GOT_POSTS = 'GOT_POST'
+export const GOT_POST = 'GOT_POST'
 export const EDIT_POST = 'EDIT_POST'
 export const DELETE_POST = 'DELETE_POST'
 export const ADD_COMMENT = 'ADD_COMMENT'
@@ -24,6 +25,13 @@ export function gotPosts (posts) {
     return {
         type: GOT_POSTS,
         posts: posts
+    }
+}
+
+export function gotPost (post) {
+    return {
+        type: GOT_POST,
+        post: post
     }
 }
 

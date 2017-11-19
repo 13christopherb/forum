@@ -1,8 +1,9 @@
 import React, {Component} from "react";
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
+import _ from "underscore"
 import uuidv4 from 'uuid';
-import {editPost} from '../actions/actions';
+import {addComment, editPost, gotPosts, gotComments} from '../actions/actions';
 import * as ForumAPI from '../utils/ForumAPI.js';
 import Comment from './Comment.js';
 import EditPost from './EditPost.js';
@@ -19,17 +20,13 @@ class Post extends React.Component {
 
     componentDidMount() {
         ForumAPI.getPost(this.props.match.params.id).then(data => {
-                this.setState({
-                    post: data,
-                    title: data.title,
-                    body: data.body
-                });
+            let posts = [];
+            posts.push(data);
+            this.props.dispatch(gotPosts(posts));
             }
         );
         ForumAPI.getCommentsFromPost(this.props.match.params.id).then(data => {
-           this.setState({
-              comments: data
-           });
+            this.props.dispatch(gotComments(data));
         });
     }
 
@@ -55,10 +52,8 @@ class Post extends React.Component {
             parentId: this.state.post.id,
         };
         ForumAPI.addComment(comment);
-        let comments = [...this.state.comments];
-        comments.push(comment);
+        this.props.dispatch(addComment(comment));
         this.setState({
-            comments: comments,
             commentAuthor: '',
             commentBody: '',
         })
@@ -70,74 +65,92 @@ class Post extends React.Component {
      * @param e On click event
      */
     editPost = (post) => {
-        ForumAPI.addPost(post).then(() => {
-            this.props.dispatch(editPost(post));
-            this.setState({
-                post: post,
-                editing: false
-            });
+        ForumAPI.editPost(post)
+        this.props.dispatch(editPost(post));
+        this.setState({
+            editing: false
         });
     }
 
     render() {
         let comments = [];
-        for (var comment of this.state.comments){
+        for (var comment of this.props.comments) {
             comments.push(<Comment key={comment.id} author={comment.author} body={comment.body} id={comment.id}/>)
         }
-        return (
-            <div>
-                {!this.state.editing ? (
+            return (
                 <div>
-                    <section className="row">
-                        <div className="col-md-5">
-                            <h3>{this.state.post.title}</h3>
-                            <p><Link to={'/u/' + this.state.post.author}>{this.state.post.author}</Link></p>
+                    {!this.state.editing ? (
+                        <div>
+                            <section className="row">
+                                <div className="col-md-5">
+                                    <h3>{this.props.title}</h3>
+                                    <p><Link to={'/u/' + this.props.post.author}>{this.props.post.author}</Link></p>
+                                </div>
+                                <div className="col-md-3 offset-md-4">
+                                    <button onClick={this.editingPost} className="btn btn-primary">Edit post</button>
+                                </div>
+                            </section>
+                            <section className="row">
+                                <div className="col-md-8 offset-md-2">
+                                    <article className="jumbotron">
+                                        {this.props.post.body}
+                                    </article>
+                                </div>
+                            </section>
+                            <section className="row">
+                                <div className="col-md-6"></div>
+                            </section>
+                            <section className="row">
+                                <div className="col-md-12">
+                                    <form onSubmit={this.handleCommentSubmit}>
+                                        <label>
+                                            Comment
+                                            <textarea
+                                                name="commentBody"
+                                                value={this.state.commentBody}
+                                                onChange={this.handleCommentChange}></textarea>
+                                        </label>
+                                        <label>
+                                            Author
+                                            <input
+                                                name="commentAuthor"
+                                                value={this.state.commentAuthor}
+                                                onChange={this.handleCommentChange}/>
+                                        </label>
+                                        <button type="submit">Submit</button>
+                                    </form>
+                                </div>
+                            </section>
+                        </div>) : (
+                        <div>
+                            <EditPost editPost={this.editPost} post={this.props.post}/>
                         </div>
-                        <div className="col-md-3 offset-md-4">
-                            <button onClick={this.editingPost} className="btn btn-primary">Edit post</button>
-                        </div>
-                    </section>
-                    <section className="row">
-                        <div className="col-md-8 offset-md-2">
-                            <article className="jumbotron">
-                                {this.state.post.body}
-                            </article>
-                        </div>
-                    </section>
-                    <section className="row">
-                        <div className="col-md-6"></div>
-                    </section>
-                    <section className="row">
-                        <div className="col-md-12">
-                            <form onSubmit={this.handleCommentSubmit}>
-                                <label>
-                                    Comment
-                                    <textarea
-                                        name="commentBody"
-                                        value={this.state.commentBody}
-                                        onChange={this.handleCommentChange}></textarea>
-                                </label>
-                                <label>
-                                    Author
-                                    <input
-                                        name="commentAuthor"
-                                        value={this.state.commentAuthor}
-                                        onChange={this.handleCommentChange} />
-                                </label>
-                                <button type="submit">Submit</button>
-                            </form>
-                        </div>
-                    </section>
-                </div>) : (
-                    <div>
-                        <EditPost editPost={this.editPost} body={this.state.body} title={this.state.title} />
-                    </div>
 
-                )}
-                <section>{comments}</section>
-            </div>
-        )
+                    )}
+                    <section>{comments}</section>
+                </div>
+            )
     }
 }
 
-export default connect()(Post)
+function mapStateToProps({posts, comments}, ownProps) {
+    console.log(comments);
+    let post =_.find(posts.posts, (p) => {
+       return p.id === ownProps.match.params.id
+    });
+    if (post) {
+        return {
+            post: post,
+            comments: comments.comments
+        }
+    } else {
+        return {
+            post: {},
+            comments: comments.comments
+        }
+    }
+}
+
+export default connect(
+    mapStateToProps
+)(Post)

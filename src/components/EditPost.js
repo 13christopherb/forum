@@ -3,8 +3,9 @@ import React, {Component} from "react";
 class EditPost extends React.Component {
 
     state = {
-        body: this.props.body,
-        title: this.props.title,
+        body: this.props.post.body,
+        title: this.props.post.title,
+        post: this.props.post,
     }
 
     /**
