@@ -65,11 +65,21 @@ export const getCommentsFromPost = (id) =>
     ).then(res => res.json())
 
 export const addComment = (comment) => {
-    console.log(comment);
     fetch(api + `/comments`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(comment)
+    }).then(res => res.json())
+}
+
+export const editComment = (comment) => {
+    fetch(api + `/comments/` + comment.id, {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify({
+            timeStamp: Date.now(),
+            body: comment.body
+        })
     }).then(res => res.json())
 }
 

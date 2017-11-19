@@ -83,6 +83,7 @@ class Post extends React.Component {
                 <div>
                     {!this.state.editing ? (
                         <div>
+                            {/* Post */}
                             <section className="row">
                                 <div className="col-md-5">
                                     <VoteDisplay post={this.props.post} type="post" />
@@ -93,6 +94,7 @@ class Post extends React.Component {
                                     <button onClick={this.editingPost} className="btn btn-primary">Edit post</button>
                                 </div>
                             </section>
+
                             <section className="row">
                                 <div className="col-md-8 offset-md-2">
                                     <article className="jumbotron">
@@ -100,9 +102,11 @@ class Post extends React.Component {
                                     </article>
                                 </div>
                             </section>
+
                             <section className="row">
                                 <div className="col-md-6"></div>
                             </section>
+                            {/* Comment input field */}
                             <section className="row">
                                 <div className="col-md-12">
                                     <form onSubmit={this.handleCommentSubmit}>
@@ -124,13 +128,19 @@ class Post extends React.Component {
                                     </form>
                                 </div>
                             </section>
-                        </div>) : (
+                        </div>
+                    ) : (
                         <div>
                             <EditPost editPost={this.editPost} post={this.props.post}/>
                         </div>
 
                     )}
-                    <section>{comments}</section>
+                    {/* Comments */}
+                    <section className="row">
+                        <div className="col-md-6">
+                            {comments}
+                        </div>
+                    </section>
                 </div>
             )
     }

@@ -8,7 +8,7 @@ class VoteButton extends React.Component {
 
     render() {
         var size;
-        this.props.type === 'comment' ? size='btn-xs' : size='';
+        this.props.type === 'comment' ? size='btn-xs' : size='btn-sm';
         return (
             <div>
                 {this.props.value === 'upVote' ? (
