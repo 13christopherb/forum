@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import _ from "underscore"
 import uuidv4 from 'uuid';
-import {addComment, editPost, gotPosts, gotComments} from '../actions/actions';
+import {addComment, editPost, gotPosts, gotComments, deleteComment, sortComments} from '../actions/actions';
 import * as ForumAPI from '../utils/ForumAPI.js';
 import Comment from './Comment.js';
 import EditPost from './EditPost.js';
@@ -29,7 +29,13 @@ class Post extends React.Component {
         );
         ForumAPI.getCommentsFromPost(this.props.match.params.id).then(data => {
             this.props.dispatch(gotComments(data));
+            this.props.dispatch(sortComments('voteScore'));
         });
+    }
+
+    deleteChildComment = (comment) => {
+        ForumAPI.deleteComment(comment)
+        this.props.dispatch(deleteComment(comment));
     }
 
     editingPost = (e) => {
@@ -52,6 +58,7 @@ class Post extends React.Component {
             author: this.state.commentAuthor,
             body: this.state.commentBody,
             parentId: this.props.post.id,
+            voteScore: 1,
         };
         ForumAPI.addComment(comment);
         this.props.dispatch(addComment(comment));
@@ -77,7 +84,7 @@ class Post extends React.Component {
     render() {
         let comments = [];
         for (var comment of this.props.comments) {
-            comments.push(<Comment key={comment.id} comment={comment}/>)
+            comments.push(<Comment key={comment.id} delete={this.deleteChildComment} comment={comment}/>)
         }
             return (
                 <div>

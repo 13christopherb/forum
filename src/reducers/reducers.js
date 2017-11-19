@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import _ from 'underscore';
 import {
-    ADD_POST, DELETE_POST, GOT_POSTS, GOT_POST, EDIT_POST, ADD_COMMENT,
-    GOT_COMMENTS, EDIT_COMMENT
+    ADD_POST, DELETE_POST, GOT_POSTS, GOT_POST, EDIT_POST, SORT_POSTS,
+    ADD_COMMENT, GOT_COMMENTS, EDIT_COMMENT, SORT_COMMENTS, DELETE_COMMENT
 } from "../actions/actions";
 
 const initialState = {
@@ -54,6 +54,19 @@ function posts(state=initialState, action) {
                     return action.post.id === p.id;
                 })
             }
+        case SORT_POSTS:
+            posts = [...state['posts']];
+            posts.sort((a, b) => {
+                switch (action.sortType) {
+                    case 'voteScore':
+                        return (a.voteScore > b.voteScore) ? -1 : 1;
+                        return 0;
+                }
+            });
+            return {
+                ...state,
+                posts: posts
+            }
         default:
             return state
     }
@@ -84,6 +97,26 @@ function comments(state=initialState, action) {
             return {
                 ...state,
                 ['comments']: comments
+            }
+        case DELETE_COMMENT:
+            return {
+                ...state,
+                ['comments']: _.reject(state['comments'], (c) => {
+                    return action.comment.id === c.id;
+                })
+            }
+        case SORT_COMMENTS:
+            comments = [...state['comments']];
+            comments.sort((a, b) => {
+               switch (action.sortType) {
+                   case 'voteScore':
+                       return (a.voteScore > b.voteScore) ? -1 : 1;
+                       return 0;
+               }
+            });
+            return {
+                ...state,
+                comments: comments
             }
         default:
             return state

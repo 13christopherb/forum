@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import VoteButton from './VoteButton.js';
 import * as ForumAPI from '../utils/ForumAPI.js';
 import {connect} from 'react-redux'
-import {editPost, editComment} from '../actions/actions'
+import {editPost, sortPosts, editComment, sortComments} from '../actions/actions'
 
 class VoteDisplay extends React.Component {
 
@@ -12,9 +12,10 @@ class VoteDisplay extends React.Component {
     }
 
     /**
-     * Handles a vote on the specific post. Should allow only a single vote
+     * Handles a vote on the specific post/comment. Should allow only a single vote
      * per page load. If a user has already voted once on this page load, a second vote
      * will change the vote count to effectively counteract the previous vote.
+     * Function then updates the voteCount for the post/comment and resorts them
      * @param vote A string representing the vote: 'upVote' or 'downVote'
      */
     handleVote = (vote) => {
@@ -52,6 +53,8 @@ class VoteDisplay extends React.Component {
             }
         }
 
+        /* Update the server */
+
         for (let i = 0; i < Math.abs(delVoteScore); i++) {
             if (this.props.type==='post') {
                 ForumAPI.voteOnPost(this.props.post, voteResult);
@@ -60,13 +63,17 @@ class VoteDisplay extends React.Component {
             }
         }
 
+        /* Update the state and resort */
+
         var post = {...this.props.post};
         post['voteScore'] = this.props.post.voteScore + delVoteScore
 
         if (this.props.type==='post') {
             this.props.dispatch(editPost(post));
+            this.props.dispatch(sortPosts('voteScore'));
         } else if (this.props.type==='comment') {
             this.props.dispatch(editComment(post));
+            this.props.dispatch(sortComments('voteScore'));
         }
 
         this.setState({

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {connect} from 'react-redux';
 import VoteDisplay from './VoteDisplay.js';
-import {editComment} from '../actions/actions';
+import {editComment, deleteComment} from '../actions/actions';
 import * as ForumAPI from '../utils/ForumAPI.js';
 import '../App.css';
 
@@ -10,6 +10,27 @@ class Comment extends React.Component {
     state = {
         body: this.props.comment.body,
         editing: false,
+        deleting: false
+    }
+
+    /**
+     * Deletes the comment while requiring confirmation
+     * @param e Onclick event
+     */
+    delete = (e) => {
+        if (!this.state.deleting) {
+            this.setState({
+                deleting: true
+            });
+        } else if (this.state.deleting) {
+            if (e.target.name === 'yes') {
+                this.props.delete(this.props.comment);
+            } else {
+                this.setState({
+                    deleting: false
+                })
+            }
+        }
     }
 
     editing = (e) => {
@@ -49,29 +70,37 @@ class Comment extends React.Component {
 
     render() {
         return (
-                    <div className="bs-callout bs-callout-info">
-                        <div className="row">
-                            <div className="col-md-2">
-                                <VoteDisplay type="comment" post={this.props.comment}/>
-                            </div>
-                            <div className="col-md-10">
-                                <p>{this.props.comment.author}</p>
-                                <div>
-                                    {!this.state.editing ? (
-                                        <p>{this.props.comment.body}</p>) : (
-                                        <form onSubmit={this.handleSubmit}>
+            <div className="bs-callout bs-callout-info">
+                <div className="row">
+                    <div className="col-md-2">
+                        <VoteDisplay type="comment" post={this.props.comment}/>
+                    </div>
+                    <div className="col-md-10">
+                        <p>{this.props.comment.author}</p>
+                        <div>
+                            {!this.state.editing ? (
+                                <p>{this.props.comment.body}</p>) : (
+                                <form onSubmit={this.handleSubmit}>
                                         <textarea
                                             name="body"
                                             value={this.state.body} onChange={this.handleInputChange}></textarea>
-                                            <button className="btn btn-sm btn-primary" type="submit">Submit</button>
-                                            <button className="btn btn-sm btn-primary" onClick={this.editing}>Cancel</button>
-                                        </form>
-                                    )}
-                                    <a href="#" onClick={this.editing}>Edit</a>
-                                </div>
-                            </div>
+                                    <button className="btn btn-sm btn-primary" type="submit">Submit</button>
+                                    <button className="btn btn-sm btn-primary" onClick={this.editing}>Cancel</button>
+                                </form>
+                            )}
+                            <a href="#" className="comment-link" onClick={this.editing}>Edit</a>
+                            {!this.state.deleting ? (
+                            <a href="#" className="comment-link" onClick={this.delete}>Delete</a>
+                            ) : (
+                                <span>
+                                    <a href="#" name="yes" className="comment-link" onClick={this.delete}>Yes</a>
+                                    <a href="#" name="no" className="comment-link" onClick={this.delete}>No</a>
+                                </span>
+                            )}
                         </div>
-                    </div>)
+                    </div>
+                </div>
+            </div>)
     }
 }
 

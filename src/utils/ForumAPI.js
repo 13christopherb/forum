@@ -72,6 +72,13 @@ export const addComment = (comment) => {
     }).then(res => res.json())
 }
 
+export const deleteComment = (comment) => {
+    fetch(api + `/comments/` + comment.id, {
+        method: 'DELETE',
+        headers: headers,
+    }).then(res => res.json())
+}
+
 export const editComment = (comment) => {
     fetch(api + `/comments/` + comment.id, {
         method: 'PUT',
