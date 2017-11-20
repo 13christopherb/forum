@@ -5,7 +5,6 @@ import {gotCategories, gotPosts, deletePost, sortPosts} from '../actions/actions
 import PostTitle from './PostTitle.js';
 import CategoryName from './CategoryName.js';
 import * as ForumAPI from '../utils/ForumAPI.js'
-import "bootstrap/dist/css/bootstrap.css";
 
 class Posts extends React.Component {
 
