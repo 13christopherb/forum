@@ -26,7 +26,6 @@ function posts(state=initialState, action) {
             });
             newState['posts'].push(action.post);
             return {
-                ...state,
                 state: newState
             }
         case EDIT_POST:
