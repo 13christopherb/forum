@@ -1,9 +1,10 @@
 import React, {Component} from "react";
 import {connect} from 'react-redux';
-import {Route, Redirect} from 'react-router'
-import uuidv4 from 'uuid'
-import {addPost} from '../actions/actions'
-import * as ForumAPI from '../utils/ForumAPI.js'
+import {Route, Redirect} from 'react-router';
+import uuidv4 from 'uuid';
+import {addPost, gotCategories} from '../actions/actions';
+import * as ForumAPI from '../utils/ForumAPI.js';
+import CategoryOption from './CategoryOption.js';
 
 class NewPost extends React.Component {
 
@@ -11,6 +12,14 @@ class NewPost extends React.Component {
         value: {},
         created: false
     };
+
+    componentDidMount() {
+        if (this.props.categories.length === 0) {
+            ForumAPI.getCategories().then(data => {
+                this.props.dispatch(gotCategories(data.categories));
+            })
+        }
+    }
 
     /**
      * Saves the input values to the state to submit later
@@ -39,7 +48,7 @@ class NewPost extends React.Component {
             title: this.state['title'],
             body: this.state['body'],
             author: this.state['author'],
-            category: 'react'
+            category: this.state['category']
         };
         ForumAPI.addPost(post).then(() => {
             this.props.dispatch(addPost(post));
@@ -51,6 +60,10 @@ class NewPost extends React.Component {
     }
 
     render() {
+        let categories = [];
+        for (let category of this.props.categories) {
+            categories.push(<CategoryOption category={category} key={category.name}/>);
+        }
         return (
             <div>
                 <Route exact path="/new" render={() => (
@@ -58,6 +71,14 @@ class NewPost extends React.Component {
                         <Redirect to={'/posts/' + this.state.id}/>
                     ) : <div>
                         <form onSubmit={this.handleSubmit}>
+                            <label>
+                                Category
+                            <select
+                                name="category"
+                                onChange={this.handleInputChange}>
+                                {categories}
+                            </select>
+                            </label>
                             <label>
                                 Title
                                 <input
@@ -85,4 +106,13 @@ class NewPost extends React.Component {
     }
 }
 
-export default connect()(NewPost)
+function mapStateToProps({categories}) {
+    return {
+        categories: categories.categories
+    }
+}
+
+
+export default connect(
+    mapStateToProps,
+)(NewPost)
