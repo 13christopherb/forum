@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {gotCategories, gotPosts, deletePost, sortPosts} from '../actions/actions'
 import PostTitle from './PostTitle.js';
-import Category from './Category.js';
+import CategoryName from './CategoryName.js';
 import * as ForumAPI from '../utils/ForumAPI.js'
 import "bootstrap/dist/css/bootstrap.css";
 
@@ -15,14 +15,48 @@ class Posts extends React.Component {
     }
 
     componentDidMount() {
-        ForumAPI.getAllPosts().then(data => {
-                this.props.dispatch(gotPosts(data));
-                this.props.dispatch(sortPosts('top'));
-            }
-        );
+        if (this.props.category) {
+            ForumAPI.getFilteredPosts(this.props.category).then(data => {
+                    console.log(data);
+                    this.props.dispatch(gotPosts(data));
+                    this.props.dispatch(sortPosts('top'));
+                }
+            );
+        } else {
+            ForumAPI.getAllPosts().then(data => {
+                    this.props.dispatch(gotPosts(data));
+                    this.props.dispatch(sortPosts('top'));
+                }
+            );
+        }
+
         ForumAPI.getCategories().then(data => {
             this.props.dispatch(gotCategories(data.categories));
         })
+    }
+
+
+    /**
+     * If a new category has been selected, refetch the posts that match the category
+     * @param nextProps The new props received
+     */
+    componentWillReceiveProps(nextProps) {
+        if (this.props.category !== nextProps.category) {
+            if (nextProps.category) {
+                ForumAPI.getFilteredPosts(nextProps.category).then(data => {
+                        this.props.dispatch(gotPosts(data));
+                        this.props.dispatch(sortPosts('top'));
+                    }
+                );
+            } else {
+                ForumAPI.getAllPosts().then(data => {
+                        this.props.dispatch(gotPosts(data));
+                        this.props.dispatch(sortPosts('top'));
+                    }
+                );
+            }
+
+        }
     }
 
     deletePost = (post) => {
@@ -41,7 +75,7 @@ class Posts extends React.Component {
         }
         let categories = [];
         for (let category of this.props.categories) {
-            categories.push(<Category category={category} key={category.name}/>);
+            categories.push(<CategoryName category={category} key={category.name}/>);
         }
         return (
             <div>
@@ -54,10 +88,8 @@ class Posts extends React.Component {
                             <option value="oldest">Old</option>
                         </select>
                     </div>
-                    <div className="navbar col-md-6">
-                        <select onChange={this.changeCategory}>
-                            {categories}
-                        </select>
+                    <div className="col-md-6">
+                        {categories}
                     </div>
                     <div className="col-md-3">
                         <Link className="btn btn-primary" to="/new">Create post</Link>
@@ -77,10 +109,11 @@ class Posts extends React.Component {
     }
 }
 
-function mapStateToProps({categories, posts}) {
+function mapStateToProps({categories, posts}, ownProps) {
     return {
         categories: categories.categories,
-        posts: posts.posts
+        posts: posts.posts,
+        category: ownProps.match.params.category
     }
 }
 

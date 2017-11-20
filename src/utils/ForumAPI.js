@@ -20,6 +20,10 @@ export const getAllPosts = () =>
     fetch(api + '/posts', { headers: headers}
     ).then(res => res.json())
 
+export const getFilteredPosts = (category) =>
+    fetch(api + '/' + category + '/posts', { headers: headers}
+    ).then(res => res.json())
+
 export const addPost = (post) =>
     fetch(api + `/posts`, {
         method: 'POST',
