@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {connect} from 'react-redux';
 import {Route, Redirect} from 'react-router'
 import uuidv4 from 'uuid'
+import moment from 'moment'
 import {addPost} from '../actions/actions'
 import * as ForumAPI from '../utils/ForumAPI.js'
 

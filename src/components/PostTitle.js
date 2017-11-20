@@ -1,8 +1,7 @@
 import React, {Component} from "react";
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
-import * as ForumAPI from '../utils/ForumAPI.js';
-import {editPost} from '../actions/actions'
+import moment from 'moment';
 import VoteDisplay from './VoteDisplay.js';
 
 class PostTitle extends React.Component {
@@ -21,6 +20,7 @@ class PostTitle extends React.Component {
                     <Link
                         to={"/posts/" + this.props.post.id}
                     ><h4>{this.props.post.title}</h4></Link>
+                    <p><small>{moment(this.props.post.timestamp, 'x').from(Date.now())}</small></p>
                 </td>
                 <td>
                     <Link

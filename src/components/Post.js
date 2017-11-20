@@ -29,7 +29,7 @@ class Post extends React.Component {
         );
         ForumAPI.getCommentsFromPost(this.props.match.params.id).then(data => {
             this.props.dispatch(gotComments(data));
-            this.props.dispatch(sortComments('voteScore'));
+            this.props.dispatch(sortComments('top'));
         });
     }
 
@@ -79,6 +79,10 @@ class Post extends React.Component {
         this.setState({
             editing: false
         });
+    }
+
+    sort = (e) => {
+        this.props.dispatch(sortComments(e.target.value))
     }
 
     render() {
@@ -143,6 +147,17 @@ class Post extends React.Component {
 
                     )}
                     {/* Comments */}
+                    <div className="row">
+                        <div className="col-md-2">
+                            <h4>Comments</h4>
+                        </div>
+                        <div className="col-md-2">
+                            <select onChange={this.sort}>
+                                <option value="top">Top</option>
+                                <option value="bottom">Bottom</option>
+                            </select>
+                        </div>
+                    </div>
                     <section className="row">
                         <div className="col-md-6">
                             {comments}

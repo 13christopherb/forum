@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Link} from 'react-router-dom';
 import _ from "underscore"
 import {connect} from 'react-redux'
-import {gotPosts, deletePost} from '../actions/actions'
+import {gotPosts, deletePost, sortPosts} from '../actions/actions'
 import PostTitle from './PostTitle.js'
 import * as ForumAPI from '../utils/ForumAPI.js'
 import "bootstrap/dist/css/bootstrap.css";
@@ -18,6 +18,7 @@ class Posts extends React.Component {
     componentDidMount() {
         ForumAPI.getAllPosts().then(data => {
                 this.props.dispatch(gotPosts(data));
+                this.props.dispatch(sortPosts('top'))
             }
         );
     }
@@ -25,6 +26,10 @@ class Posts extends React.Component {
     deletePost = (post) => {
         ForumAPI.deletePost(post.props.post.id)
         this.props.dispatch(deletePost(post.props.post));
+    }
+
+    sort = (e) => {
+        this.props.dispatch(sortPosts(e.target.value))
     }
 
     render() {
@@ -35,7 +40,17 @@ class Posts extends React.Component {
         return (
             <div>
                 <div className="row">
-                    <div className="col-md-3 offset-md-9">
+                    <div className="col-md-3">
+                        <div className="col-md-2">
+                            <select onChange={this.sort}>
+                                <option value="top">Top</option>
+                                <option value="bottom">Bottom</option>
+                                <option value="newest">New</option>
+                                <option value="oldest">Old</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className="col-md-3 offset-md-6">
                         <Link className="btn btn-primary" to="/new">Create post</Link>
                     </div>
                 </div>

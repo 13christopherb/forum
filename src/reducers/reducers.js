@@ -58,8 +58,17 @@ function posts(state=initialState, action) {
             posts = [...state['posts']];
             posts.sort((a, b) => {
                 switch (action.sortType) {
-                    case 'voteScore':
+                    case 'top':
                         return (a.voteScore > b.voteScore) ? -1 : 1;
+                        return 0;
+                    case 'bottom':
+                        return (a.voteScore < b.voteScore) ? -1 : 1;
+                        return 0;
+                    case 'newest':
+                        return (a.timestamp > b.timestamp) ? -1 : 1;
+                        return 0;
+                    case 'oldest':
+                        return (a.timestamp < b.timestamp) ? -1 : 1;
                         return 0;
                 }
             });
@@ -109,8 +118,11 @@ function comments(state=initialState, action) {
             comments = [...state['comments']];
             comments.sort((a, b) => {
                switch (action.sortType) {
-                   case 'voteScore':
+                   case 'top':
                        return (a.voteScore > b.voteScore) ? -1 : 1;
+                       return 0;
+                   case 'bottom':
+                       return (a.voteScore < b.voteScore) ? -1 : 1;
                        return 0;
                }
             });
