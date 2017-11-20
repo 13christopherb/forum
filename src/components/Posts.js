@@ -1,12 +1,11 @@
 import React, {Component} from "react";
 import {Link} from 'react-router-dom';
-import _ from "underscore"
-import {connect} from 'react-redux'
-import {gotPosts, deletePost, sortPosts} from '../actions/actions'
-import PostTitle from './PostTitle.js'
+import {connect} from 'react-redux';
+import {gotCategories, gotPosts, deletePost, sortPosts} from '../actions/actions'
+import PostTitle from './PostTitle.js';
+import Category from './Category.js';
 import * as ForumAPI from '../utils/ForumAPI.js'
 import "bootstrap/dist/css/bootstrap.css";
-import Header from './Header.js';
 
 class Posts extends React.Component {
 
@@ -18,9 +17,12 @@ class Posts extends React.Component {
     componentDidMount() {
         ForumAPI.getAllPosts().then(data => {
                 this.props.dispatch(gotPosts(data));
-                this.props.dispatch(sortPosts('top'))
+                this.props.dispatch(sortPosts('top'));
             }
         );
+        ForumAPI.getCategories().then(data => {
+            this.props.dispatch(gotCategories(data.categories));
+        })
     }
 
     deletePost = (post) => {
@@ -34,23 +36,30 @@ class Posts extends React.Component {
 
     render() {
         let posts = [];
-        _.each(this.props.posts, (post) => {
+        for (let post of this.props.posts) {
             posts.push(<PostTitle post={post} key={post.id} deletePost={this.deletePost}/>);
-        });
+        }
+        let categories = [];
+        for (let category of this.props.categories) {
+            categories.push(<Category category={category} key={category.name}/>);
+        }
         return (
             <div>
                 <div className="row">
                     <div className="col-md-3">
-                        <div className="col-md-2">
-                            <select onChange={this.sort}>
-                                <option value="top">Top</option>
-                                <option value="bottom">Bottom</option>
-                                <option value="newest">New</option>
-                                <option value="oldest">Old</option>
-                            </select>
-                        </div>
+                        <select onChange={this.sort}>
+                            <option value="top">Top</option>
+                            <option value="bottom">Bottom</option>
+                            <option value="newest">New</option>
+                            <option value="oldest">Old</option>
+                        </select>
                     </div>
-                    <div className="col-md-3 offset-md-6">
+                    <div className="navbar col-md-6">
+                        <select onChange={this.changeCategory}>
+                            {categories}
+                        </select>
+                    </div>
+                    <div className="col-md-3">
                         <Link className="btn btn-primary" to="/new">Create post</Link>
                     </div>
                 </div>
@@ -58,7 +67,7 @@ class Posts extends React.Component {
                     <div className="col-md-12">
                         <table className="table table-striped">
                             <tbody>
-                                {posts}
+                            {posts}
                             </tbody>
                         </table>
                     </div>
@@ -68,8 +77,9 @@ class Posts extends React.Component {
     }
 }
 
-function mapStateToProps({posts}) {
+function mapStateToProps({categories, posts}) {
     return {
+        categories: categories.categories,
         posts: posts.posts
     }
 }

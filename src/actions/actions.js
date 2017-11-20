@@ -1,3 +1,4 @@
+export const GOT_CATEGORIES = 'GOT_CATEGORIES'
 export const ADD_POST = 'ADD_POST'
 export const GOT_POSTS = 'GOT_POST'
 export const GOT_POST = 'GOT_POST'
@@ -9,6 +10,13 @@ export const GOT_COMMENTS = 'GOT_COMMENTS'
 export const EDIT_COMMENT = 'EDIT_COMMENT'
 export const DELETE_COMMENT = 'DELETE_COMMENT'
 export const SORT_COMMENTS = 'SORT_COMMENTS'
+
+export function gotCategories (categories) {
+    return {
+        type: GOT_CATEGORIES,
+        categories: categories
+    }
+}
 
 export function addPost ({ id, timestamp, title,
                              body, author, category }) {

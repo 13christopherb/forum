@@ -70,10 +70,10 @@ class VoteDisplay extends React.Component {
 
         if (this.props.type==='post') {
             this.props.dispatch(editPost(post));
-            this.props.dispatch(sortPosts('voteScore'));
+            this.props.dispatch(sortPosts('top'));
         } else if (this.props.type==='comment') {
             this.props.dispatch(editComment(post));
-            this.props.dispatch(sortComments('voteScore'));
+            this.props.dispatch(sortComments('top'));
         }
 
         this.setState({

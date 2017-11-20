@@ -8,6 +8,10 @@ const headers = {
     'Content-Type': 'application/json'
 }
 
+export const getCategories = () =>
+    fetch(api + '/categories', { headers: headers }
+    ).then(res => res.json())
+
 export const getPost = (id) =>
     fetch(api + '/posts/' + id, { headers: headers }
     ).then(res => res.json())

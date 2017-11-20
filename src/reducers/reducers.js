@@ -1,15 +1,28 @@
 import { combineReducers } from 'redux';
 import _ from 'underscore';
 import {
+    GOT_CATEGORIES,
     ADD_POST, DELETE_POST, GOT_POSTS, GOT_POST, EDIT_POST, SORT_POSTS,
     ADD_COMMENT, GOT_COMMENTS, EDIT_COMMENT, SORT_COMMENTS, DELETE_COMMENT
 } from "../actions/actions";
 
 const initialState = {
+    categories: [],
     posts: [],
     comments: []
 }
 
+function categories(state=initialState, action) {
+    switch (action.type) {
+        case GOT_CATEGORIES:
+            return {
+                ...state,
+                ['categories']: action.categories
+            }
+        default:
+            return state
+    }
+}
 
 function posts(state=initialState, action) {
     const { id, timestamp, title,
@@ -136,6 +149,7 @@ function comments(state=initialState, action) {
 }
 
 export default combineReducers({
+    categories,
     posts,
     comments
 });
