@@ -68,7 +68,7 @@ class NewPost extends React.Component {
             <div>
                 <Route exact path="/new" render={() => (
                     this.state.created ? (
-                        <Redirect to={'/posts/' + this.state.id}/>
+                        <Redirect to={'/c/' + this.state.category + '/' + this.state.id}/>
                     ) : <div>
                         <form onSubmit={this.handleSubmit}>
                             <label>

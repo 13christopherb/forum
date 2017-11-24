@@ -84,9 +84,13 @@ class VoteDisplay extends React.Component {
     render() {
         return (
             <div>
-                <VoteButton value="upVote" type={this.props.type} voteValue={this.state.voteValue} handleVote={this.handleVote}/>
+                <VoteButton value="upVote" type={this.props.type}
+                            voteValue={this.state.voteValue}
+                            handleVote={this.handleVote}/>
                 {this.props.post.voteScore}
-                <VoteButton value="downVote" type={this.props.type} voteValue={this.state.voteValue} handleVote={this.handleVote}/>
+                <VoteButton value="downVote" type={this.props.type}
+                            voteValue={this.state.voteValue}
+                            handleVote={this.handleVote}/>
             </div>
         )
     }

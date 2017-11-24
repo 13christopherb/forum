@@ -5,6 +5,7 @@ import Posts from './components/Posts.js';
 import NewPost from './components/NewPost';
 import Post from './components/Post.js';
 import Header from './components/Header.js';
+import NotFound from './components/NotFound.js';
 
 class App extends Component {
 
@@ -15,7 +16,8 @@ class App extends Component {
                 <Route exact path="/" component={Posts}/>
                 <Route exact path="/c/:category" component={Posts}/>
                 <Route exact path="/new" component={NewPost}/>
-                <Route exact path="/posts/:id" component={Post}/>
+                <Route exact path="/c/:category/:id/:edit?" component={Post}/>
+                <Route exact path="/404" component={NotFound}/>
             </div>
         );
     }

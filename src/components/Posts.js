@@ -16,7 +16,6 @@ class Posts extends React.Component {
     componentDidMount() {
         if (this.props.category) {
             ForumAPI.getFilteredPosts(this.props.category).then(data => {
-                    console.log(data);
                     this.props.dispatch(gotPosts(data));
                     this.props.dispatch(sortPosts('top'));
                 }
@@ -54,7 +53,6 @@ class Posts extends React.Component {
                     }
                 );
             }
-
         }
     }
 

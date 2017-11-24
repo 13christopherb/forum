@@ -10,9 +10,11 @@ const initialState = {
 function posts(state=initialState, action) {
     switch (action.type) {
         case ADD_POST:
+            var posts = [...state['posts']];
+            posts.push(action.post);
             return {
                 ...state,
-                ['posts']: ['posts'].push(action.post)
+                ['posts']: posts
             }
         case GOT_POSTS:
             return {

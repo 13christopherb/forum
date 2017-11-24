@@ -1,9 +1,10 @@
 import React, {Component} from "react";
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
+import {Route, Redirect} from 'react-router';
 import _ from "underscore"
 import uuidv4 from 'uuid';
-import {addComment, editPost, gotPosts, gotComments, deleteComment, sortComments} from '../actions/actions';
+import {addComment, editPost, gotPosts, gotComments, deletePost, deleteComment, sortComments} from '../actions/actions';
 import * as ForumAPI from '../utils/ForumAPI.js';
 import Comment from './Comment.js';
 import EditPost from './EditPost.js';
@@ -16,21 +17,27 @@ class Post extends React.Component {
         comments: [],
         commentAuthor: '',
         commentBody: '',
-        editing: false,
-        voteValue: 0
+        editing: this.props.editing,
+        voteValue: 0,
+        deleted: false
     }
 
     componentDidMount() {
         ForumAPI.getPost(this.props.match.params.id).then(data => {
-            let posts = [];
-            posts.push(data);
-            this.props.dispatch(gotPosts(posts));
+                let posts = [];
+                posts.push(data);
+                this.props.dispatch(gotPosts(posts));
             }
         );
         ForumAPI.getCommentsFromPost(this.props.match.params.id).then(data => {
             this.props.dispatch(gotComments(data));
             this.props.dispatch(sortComments('top'));
         });
+        if (this.props.match.params.edit) {
+            this.setState({
+                editing: true
+            });
+        }
     }
 
     deleteChildComment = (comment) => {
@@ -68,6 +75,14 @@ class Post extends React.Component {
         })
     }
 
+    deletePost = () => {
+        ForumAPI.deletePost(this.props.post.id)
+        this.props.dispatch(deletePost(this.props.post));
+        this.setState({
+            deleted: true
+        })
+    }
+
     /**
      * Posts the input values saved in the state
      * to the server.
@@ -90,87 +105,98 @@ class Post extends React.Component {
         for (var comment of this.props.comments) {
             comments.push(<Comment key={comment.id} delete={this.deleteChildComment} comment={comment}/>)
         }
-            return (
-                <div>
-                    {!this.state.editing ? (
-                        <div>
-                            {/* Post */}
-                            <section className="row">
-                                <div className="col-md-5">
-                                    <VoteDisplay post={this.props.post} type="post" />
-                                    <h2>{this.props.post.title}</h2>
-                                    <p><Link to={'/u/' + this.props.post.author}>{this.props.post.author}</Link></p>
-                                </div>
-                                <div className="col-md-3 offset-md-4">
-                                    <button onClick={this.editingPost} className="btn btn-primary">Edit post</button>
-                                </div>
-                            </section>
+        return (
+            <div>
+                <Route path="/c/:category/:id/:edit?" render={() => (
+                    this.state.deleted ? (
+                        <Redirect to="/"/>
+                    ) : (<div>
+                        {!this.props.post.category} (
+                        <Redirect to="/404"/>
+                        ) : (
+                        {!this.state.editing ? (
+                            <div>
+                                {/* Post */}
+                                <section className="row">
+                                    <div className="col-md-5">
+                                        <VoteDisplay post={this.props.post} type="post"/>
+                                        <h2>{this.props.post.title}</h2>
+                                        <p><Link to={'/u/' + this.props.post.author}>{this.props.post.author}</Link></p>
+                                    </div>
+                                    <div className="col-md-1 offset-md-4">
+                                        <button onClick={this.editingPost} className="btn btn-primary">Edit post
+                                        </button>
+                                    </div>
+                                    <div className="col-md-1">
+                                        <button onClick={this.deletePost} className="btn btn-danger">Delete</button>
+                                    </div>
+                                </section>
 
-                            <section className="row">
-                                <div className="col-md-8 offset-md-2">
-                                    <article className="jumbotron">
-                                        {this.props.post.body}
-                                    </article>
-                                </div>
-                            </section>
+                                <section className="row">
+                                    <div className="col-md-8 offset-md-2">
+                                        <article className="jumbotron">
+                                            {this.props.post.body}
+                                        </article>
+                                    </div>
+                                </section>
 
-                            <section className="row">
-                                <div className="col-md-6"></div>
-                            </section>
-                            {/* Comment input field */}
-                            <section className="row">
-                                <div className="col-md-12">
-                                    <form onSubmit={this.handleCommentSubmit}>
-                                        <label>
-                                            Comment
-                                            <textarea
-                                                name="commentBody"
-                                                value={this.state.commentBody}
-                                                onChange={this.handleCommentChange}></textarea>
-                                        </label>
-                                        <label>
-                                            Author
-                                            <input
-                                                name="commentAuthor"
-                                                value={this.state.commentAuthor}
-                                                onChange={this.handleCommentChange}/>
-                                        </label>
-                                        <button type="submit">Submit</button>
-                                    </form>
-                                </div>
-                            </section>
+                                <section className="row">
+                                    <div className="col-md-6"></div>
+                                </section>
+                                {/* Comment input field */}
+                                <section className="row">
+                                    <div className="col-md-12">
+                                        <form onSubmit={this.handleCommentSubmit}>
+                                            <label>
+                                                Comment
+                                                <textarea
+                                                    name="commentBody"
+                                                    value={this.state.commentBody}
+                                                    onChange={this.handleCommentChange}></textarea>
+                                            </label>
+                                            <label>
+                                                Author
+                                                <input
+                                                    name="commentAuthor"
+                                                    value={this.state.commentAuthor}
+                                                    onChange={this.handleCommentChange}/>
+                                            </label>
+                                            <button type="submit">Submit</button>
+                                        </form>
+                                    </div>
+                                </section>
+                            </div>
+                        ) : (
+                            <div>
+                                <EditPost editPost={this.editPost} post={this.props.post}/>
+                            </div>
+                        )}
+                        <div className="row">
+                            <div className="col-md-2">
+                                <h4>Comments</h4>
+                            </div>
+                            <div className="col-md-2">
+                                <select onChange={this.sort}>
+                                    <option value="top">Top</option>
+                                    <option value="bottom">Bottom</option>
+                                </select>
+                            </div>
                         </div>
-                    ) : (
-                        <div>
-                            <EditPost editPost={this.editPost} post={this.props.post}/>
-                        </div>
+                        <section className="row">
+                            <div className="col-md-6">
+                                {comments}
+                            </div>
+                        </section>
 
-                    )}
-                    {/* Comments */}
-                    <div className="row">
-                        <div className="col-md-2">
-                            <h4>Comments</h4>
-                        </div>
-                        <div className="col-md-2">
-                            <select onChange={this.sort}>
-                                <option value="top">Top</option>
-                                <option value="bottom">Bottom</option>
-                            </select>
-                        </div>
-                    </div>
-                    <section className="row">
-                        <div className="col-md-6">
-                            {comments}
-                        </div>
-                    </section>
-                </div>
-            )
+                    </div>))}/>
+            </div>
+        )
     }
 }
 
 function mapStateToProps({posts, comments}, ownProps) {
-    let post =_.find(posts.posts, (p) => {
-       return p.id === ownProps.match.params.id
+    let post = _.find(posts.posts, (p) => {
+        return p.id === ownProps.match.params.id
     });
     if (post) {
         return {
@@ -185,6 +211,4 @@ function mapStateToProps({posts, comments}, ownProps) {
     }
 }
 
-export default connect(
-    mapStateToProps
-)(Post)
+export default connect(mapStateToProps)(Post)
