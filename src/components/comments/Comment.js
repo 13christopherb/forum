@@ -1,9 +1,9 @@
 import React, {Component} from "react";
 import {connect} from 'react-redux';
-import VoteDisplay from './VoteDisplay.js';
-import {editComment, deleteComment} from '../actions/actions';
-import * as ForumAPI from '../utils/ForumAPI.js';
-import '../App.css';
+import VoteDisplay from '../VoteDisplay.js';
+import {editComment, deleteComment} from '../../actions/actions';
+import * as ForumAPI from '../../utils/ForumAPI.js';
+import '../../App.css';
 
 class Comment extends React.Component {
 

@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import './App.css';
 import {Route} from 'react-router';
-import Posts from './components/Posts.js';
-import NewPost from './components/NewPost';
-import Post from './components/Post.js';
+import Posts from './components/index/Posts.js';
+import NewPost from './components/post/NewPost';
+import Post from './components/post/Post.js';
 import Header from './components/Header.js';
 import NotFound from './components/NotFound.js';
 

@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import moment from 'moment';
-import VoteDisplay from './VoteDisplay.js';
+import VoteDisplay from '../VoteDisplay.js';
 
 class PostTitle extends React.Component {
 
@@ -34,6 +34,9 @@ class PostTitle extends React.Component {
                     <Link
                         to={"/u/" + this.props.post.author}
                     >{this.props.post.author}</Link>
+                </td>
+                <td>
+                    {this.props.post.category}
                 </td>
                 <td>
                     <button className="btn btn-danger" onClick={this.deletePost}>

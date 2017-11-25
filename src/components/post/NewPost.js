@@ -2,9 +2,9 @@ import React, {Component} from "react";
 import {connect} from 'react-redux';
 import {Route, Redirect} from 'react-router';
 import uuidv4 from 'uuid';
-import {addPost, gotCategories} from '../actions/actions';
-import * as ForumAPI from '../utils/ForumAPI.js';
-import CategoryOption from './CategoryOption.js';
+import {addPost, gotCategories} from '../../actions/actions';
+import * as ForumAPI from '../../utils/ForumAPI.js';
+import CategoryOption from '../index/CategoryOption.js';
 
 class NewPost extends React.Component {
 
@@ -36,7 +36,7 @@ class NewPost extends React.Component {
     }
 
     /**
-     * Posts the input values saved in the state
+     * post the input values saved in the state
      * to the server.
      * @param e On click event
      */
@@ -50,6 +50,7 @@ class NewPost extends React.Component {
             author: this.state['author'],
             category: this.state['category']
         };
+        console.log(post);
         ForumAPI.addPost(post).then(() => {
             this.props.dispatch(addPost(post));
             this.setState({
@@ -76,6 +77,7 @@ class NewPost extends React.Component {
                             <select
                                 name="category"
                                 onChange={this.handleInputChange}>
+                                <option value=""></option>
                                 {categories}
                             </select>
                             </label>

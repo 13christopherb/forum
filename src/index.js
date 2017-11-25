@@ -5,11 +5,13 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import { Provider } from 'react-redux'
 import reducer from './reducers/reducers'
-import { createStore } from 'redux'
+import { createStore , applyMiddleware} from 'redux'
+import thunk from 'redux-thunk';
 import { BrowserRouter } from 'react-router-dom';
 import "font-awesome/css/font-awesome.min.css";
 const store = createStore(
     reducer,
+    applyMiddleware(thunk)
 )
 
 ReactDOM.render(

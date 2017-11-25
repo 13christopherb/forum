@@ -1,10 +1,10 @@
 import React, {Component} from "react";
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {gotCategories, gotPosts, deletePost, sortPosts} from '../actions/actions'
+import {gotCategories, gotPosts, deletePost, sortPosts, fetchPosts} from '../../actions/actions'
 import PostTitle from './PostTitle.js';
 import CategoryName from './CategoryName.js';
-import * as ForumAPI from '../utils/ForumAPI.js'
+import * as ForumAPI from '../../utils/ForumAPI.js'
 
 class Posts extends React.Component {
 
@@ -14,20 +14,7 @@ class Posts extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.category) {
-            ForumAPI.getFilteredPosts(this.props.category).then(data => {
-                    this.props.dispatch(gotPosts(data));
-                    this.props.dispatch(sortPosts('top'));
-                }
-            );
-        } else {
-            ForumAPI.getAllPosts().then(data => {
-                    this.props.dispatch(gotPosts(data));
-                    this.props.dispatch(sortPosts('top'));
-                }
-            );
-        }
-
+        this.props.dispatch(fetchPosts(this.props.category));
         ForumAPI.getCategories().then(data => {
             this.props.dispatch(gotCategories(data.categories));
         })
@@ -35,7 +22,7 @@ class Posts extends React.Component {
 
 
     /**
-     * If a new category has been selected, refetch the posts that match the category
+     * If a new category has been selected, refetch the post that match the category
      * @param nextProps The new props received
      */
     componentWillReceiveProps(nextProps) {
@@ -47,11 +34,7 @@ class Posts extends React.Component {
                     }
                 );
             } else {
-                ForumAPI.getAllPosts().then(data => {
-                        this.props.dispatch(gotPosts(data));
-                        this.props.dispatch(sortPosts('top'));
-                    }
-                );
+                this.props.dispatch(fetchPosts());
             }
         }
     }
