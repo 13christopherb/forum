@@ -4,6 +4,10 @@ import {Link} from 'react-router-dom';
 
 class PostBody extends React.Component {
 
+    editingPost = (e) => {
+        this.props.editingPost();
+    }
+
     render() {
         return (
             <div>

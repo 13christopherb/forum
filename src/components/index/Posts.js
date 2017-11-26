@@ -1,10 +1,10 @@
 import React, {Component} from "react";
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {gotCategories, gotPosts, deletePost, sortPosts, fetchPosts} from '../../actions/actions'
+import * as actions from '../../actions/actions';
+import * as PostActions from '../../actions/posts.js';
 import PostTitle from './PostTitle.js';
 import CategoryName from './CategoryName.js';
-import * as ForumAPI from '../../utils/ForumAPI.js'
 
 class Posts extends React.Component {
 
@@ -14,10 +14,8 @@ class Posts extends React.Component {
     }
 
     componentDidMount() {
-        this.props.dispatch(fetchPosts(this.props.category));
-        ForumAPI.getCategories().then(data => {
-            this.props.dispatch(gotCategories(data.categories));
-        })
+        this.props.dispatch(PostActions.fetchPosts(this.props.category));
+        this.props.dispatch(actions.fetchCategories());
     }
 
 
@@ -27,25 +25,16 @@ class Posts extends React.Component {
      */
     componentWillReceiveProps(nextProps) {
         if (this.props.category !== nextProps.category) {
-            if (nextProps.category) {
-                ForumAPI.getFilteredPosts(nextProps.category).then(data => {
-                        this.props.dispatch(gotPosts(data));
-                        this.props.dispatch(sortPosts('top'));
-                    }
-                );
-            } else {
-                this.props.dispatch(fetchPosts());
-            }
+            this.props.dispatch(PostActions.fetchPosts(nextProps.category));
         }
     }
 
     deletePost = (post) => {
-        ForumAPI.deletePost(post.props.post.id)
-        this.props.dispatch(deletePost(post.props.post));
+        this.props.dispatch(PostActions.deletePost(post.props.post));
     }
 
     sort = (e) => {
-        this.props.dispatch(sortPosts(e.target.value))
+        this.props.dispatch(PostActions.sortPosts(e.target.value))
     }
 
     render() {
@@ -99,5 +88,5 @@ function mapStateToProps({categories, posts}, ownProps) {
 
 
 export default connect(
-    mapStateToProps,
+    mapStateToProps
 )(Posts)

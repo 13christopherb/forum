@@ -1,9 +1,8 @@
 import React, {Component} from "react";
 import {Route, Redirect} from 'react-router';
 import uuidv4 from 'uuid';
-import {addComment, editPost, gotPosts, fetchPost,
-    gotComments, fetchCommentsFromPost, deletePost, deleteComment, sortComments} from '../../actions/actions';
-import * as ForumAPI from '../../utils/ForumAPI.js';
+import * as PostActions from '../../actions/posts.js';
+import * as CommentActions from '../../actions/comments.js';
 import Comment from '../comments/Comment.js';
 import EditPost from './EditPost.js';
 import PostBody from './PostBody.js';
@@ -25,8 +24,7 @@ class Post extends React.Component {
     }
 
     componentDidMount() {
-        this.props.dispatch(fetchPost(this.props.match.params.id));
-        this.props.dispatch(fetchCommentsFromPost(this.props.post.id));
+        this.props.dispatch(PostActions.fetchPost(this.props.match.params.id));
         if (this.props.match.params.edit) {
             this.setState({
                 editing: true
@@ -35,8 +33,7 @@ class Post extends React.Component {
     }
 
     deleteChildComment = (comment) => {
-        ForumAPI.deleteComment(comment)
-        this.props.dispatch(deleteComment(comment));
+        this.props.dispatch(CommentActions.deleteComment(comment));
     }
 
     editingPost = (e) => {
@@ -61,8 +58,7 @@ class Post extends React.Component {
             parentId: this.props.post.id,
             voteScore: 1,
         };
-        ForumAPI.addComment(comment);
-        this.props.dispatch(addComment(comment));
+        this.props.dispatch(CommentActions.postComment(comment));
         this.setState({
             commentAuthor: '',
             commentBody: '',
@@ -70,8 +66,7 @@ class Post extends React.Component {
     }
 
     deletePost = () => {
-        ForumAPI.deletePost(this.props.post.id)
-        this.props.dispatch(deletePost(this.props.post));
+        this.props.dispatch(PostActions.deletePost(this.props.post));
         this.setState({
             deleted: true
         })
@@ -83,15 +78,14 @@ class Post extends React.Component {
      * @param e On click event
      */
     editPost = (post) => {
-        ForumAPI.editPost(post)
-        this.props.dispatch(editPost(post));
+        this.props.dispatch(PostActions.updatePost(post));
         this.setState({
             editing: false
         });
     }
 
     sort = (e) => {
-        this.props.dispatch(sortComments(e.target.value))
+        this.props.dispatch(CommentActions.sortComments(e.target.value))
     }
 
     render() {
@@ -99,6 +93,8 @@ class Post extends React.Component {
         for (var comment of this.props.comments) {
             comments.push(<Comment key={comment.id} delete={this.deleteChildComment} comment={comment}/>)
         }
+        let post;
+        this.props.post ? post = this.props.post : post = {};
         return (
             <div>
                 <Route path="/c/:category/:id/:edit?" render={() => (
@@ -106,13 +102,13 @@ class Post extends React.Component {
                         <Redirect to="/"/>
                     ) : (
                         <div>
-                            {!this.props.post.category ? (
+                            {!post.category ? (
                                 <NotFound/>
                             ) : (
                                 <div>
                                     {!this.state.editing ? (
                                         <div>
-                                            <PostBody post={this.props.post}/>
+                                            <PostBody editingPost={this.editingPost} post={post}/>
                                             {/* Comment input field */}
                                             <section className="row">
                                                 <div className="col-md-12">
@@ -138,7 +134,7 @@ class Post extends React.Component {
                                         </div>
                                     ) : (
                                         <div>
-                                            <EditPost editPost={this.editPost} post={this.props.post}/>
+                                            <EditPost editPost={this.editPost} post={post}/>
                                         </div>
                                     )}
                                     <div className="row">
@@ -166,19 +162,9 @@ class Post extends React.Component {
 }
 
 function mapStateToProps({posts, comments}, ownProps) {
-    let post = _.find(posts.posts, (p) => {
-        return p.id === ownProps.match.params.id
-    });
-    if (post) {
-        return {
-            post: post,
-            comments: comments.comments
-        }
-    } else {
-        return {
-            post: {},
-            comments: comments.comments
-        }
+    return {
+        post: posts.posts[0],
+        comments: comments.comments
     }
 }
 

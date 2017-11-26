@@ -2,8 +2,8 @@ import React, {Component} from "react";
 import {connect} from 'react-redux';
 import {Route, Redirect} from 'react-router';
 import uuidv4 from 'uuid';
-import {addPost, gotCategories} from '../../actions/actions';
-import * as ForumAPI from '../../utils/ForumAPI.js';
+import * as actions from '../../actions/actions';
+import * as PostActions from '../../actions/posts.js';
 import CategoryOption from '../index/CategoryOption.js';
 
 class NewPost extends React.Component {
@@ -15,9 +15,7 @@ class NewPost extends React.Component {
 
     componentDidMount() {
         if (this.props.categories.length === 0) {
-            ForumAPI.getCategories().then(data => {
-                this.props.dispatch(gotCategories(data.categories));
-            })
+            this.props.dispatch(actions.fetchCategories());
         }
     }
 
@@ -50,13 +48,10 @@ class NewPost extends React.Component {
             author: this.state['author'],
             category: this.state['category']
         };
-        console.log(post);
-        ForumAPI.addPost(post).then(() => {
-            this.props.dispatch(addPost(post));
-            this.setState({
-                created: true,
-                id: post.id
-            });
+        this.props.dispatch(PostActions.postPost(post));
+        this.setState({
+            created: true,
+            id: post.id
         });
     }
 
@@ -74,12 +69,12 @@ class NewPost extends React.Component {
                         <form onSubmit={this.handleSubmit}>
                             <label>
                                 Category
-                            <select
-                                name="category"
-                                onChange={this.handleInputChange}>
-                                <option value=""></option>
-                                {categories}
-                            </select>
+                                <select
+                                    name="category"
+                                    onChange={this.handleInputChange}>
+                                    <option value=""></option>
+                                    {categories}
+                                </select>
                             </label>
                             <label>
                                 Title

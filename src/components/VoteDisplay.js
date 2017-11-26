@@ -1,8 +1,9 @@
 import React, {Component} from "react";
 import VoteButton from './VoteButton.js';
-import * as ForumAPI from '../utils/ForumAPI.js';
 import {connect} from 'react-redux'
-import {editPost, sortPosts, editComment, sortComments} from '../actions/actions'
+import * as actions from '../actions/actions'
+import * as PostActions from '../actions/posts.js';
+import * as CommentActions from '../actions/comments.js';
 
 class VoteDisplay extends React.Component {
 
@@ -53,27 +54,14 @@ class VoteDisplay extends React.Component {
             }
         }
 
-        /* Update the server */
-
-        for (let i = 0; i < Math.abs(delVoteScore); i++) {
-            if (this.props.type==='post') {
-                ForumAPI.voteOnPost(this.props.post, voteResult);
-            } else if (this.props.type==='comment') {
-                ForumAPI.voteOnComment(this.props.post, voteResult);
-            }
-        }
-
-        /* Update the state and resort */
-
         var post = {...this.props.post};
         post['voteScore'] = this.props.post.voteScore + delVoteScore
 
+
         if (this.props.type==='post') {
-            this.props.dispatch(editPost(post));
-            this.props.dispatch(sortPosts('top'));
+            this.props.dispatch(PostActions.postVote(post, delVoteScore, voteResult));
         } else if (this.props.type==='comment') {
-            this.props.dispatch(editComment(post));
-            this.props.dispatch(sortComments('top'));
+            this.props.dispatch(CommentActions.commentVote(post, delVoteScore, voteResult));
         }
 
         this.setState({

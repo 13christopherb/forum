@@ -1,7 +1,5 @@
 import _ from 'underscore';
-import {
-    ADD_POST, DELETE_POST, GOT_POSTS, GOT_POST, EDIT_POST, SORT_POSTS
-} from "../actions/actions";
+import * as PostActions from "../actions/posts.js";
 
 const initialState = {
     posts: []
@@ -9,19 +7,19 @@ const initialState = {
 
 function posts(state=initialState, action) {
     switch (action.type) {
-        case ADD_POST:
+        case PostActions.ADD_POST:
             var posts = [...state['posts']];
             posts.push(action.post);
             return {
                 ...state,
                 ['posts']: posts
             }
-        case GOT_POSTS:
+        case PostActions.GOT_POSTS:
             return {
                 ...state,
                 ['posts']: action.posts
             }
-        case GOT_POST:
+        case PostActions.GOT_POST:
             let newState = {...state};
             newState['posts'] = _.reject(newState['posts'], (p) => {
                 return action.post.id === p.id;
@@ -30,7 +28,7 @@ function posts(state=initialState, action) {
             return {
                 state: newState
             }
-        case EDIT_POST:
+        case PostActions.EDIT_POST:
             var posts = [...state['posts']];
             for (var i = 0; i < posts.length; i++) {
                 if (posts[i].id === action.post.id) {
@@ -41,14 +39,14 @@ function posts(state=initialState, action) {
                 ...state,
                 ['posts']: posts
             }
-        case DELETE_POST:
+        case PostActions.DELETE_POST:
             return {
                 ...state,
                 ['posts']: _.reject(state['posts'], (p) => {
                     return action.post.id === p.id;
                 })
             }
-        case SORT_POSTS:
+        case PostActions.SORT_POSTS:
             posts = [...state['posts']];
             posts.sort((a, b) => {
                 switch (action.sortType) {

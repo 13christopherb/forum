@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {connect} from 'react-redux';
 import VoteDisplay from '../VoteDisplay.js';
-import {editComment, deleteComment} from '../../actions/actions';
-import * as ForumAPI from '../../utils/ForumAPI.js';
+import * as actions from '../../actions/actions';
+import * as CommentActions from '../../actions/comments.js';
 import '../../App.css';
 
 class Comment extends React.Component {
@@ -61,8 +61,7 @@ class Comment extends React.Component {
             ...this.props.comment,
             ['body']: this.state.body
         }
-        ForumAPI.editComment(comment);
-        this.props.dispatch(editComment(comment));
+        this.props.dispatch(CommentActions.updateComment(comment));
         this.setState({
             editing: false
         });

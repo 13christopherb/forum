@@ -21,7 +21,7 @@ export const getAllPosts = () =>
     ).then(res => res.json())
 
 export const getFilteredPosts = (category) =>
-    fetch(api + '/' + category + '/post', { headers: headers}
+    fetch(api + '/' + category + '/posts', { headers: headers}
     ).then(res => res.json())
 
 export const addPost = (post) =>
@@ -73,11 +73,11 @@ export const getCommentsFromPost = (id) =>
     ).then(res => res.json())
 
 export const addComment = (comment) => {
-    fetch(api + `/comments`, {
+    return fetch(api + `/comments`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(comment)
-    }).then(res => res.json())
+    })
 }
 
 export const deleteComment = (comment) => {

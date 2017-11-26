@@ -1,7 +1,5 @@
 import _ from 'underscore';
-import {
-    ADD_COMMENT, GOT_COMMENTS, EDIT_COMMENT, SORT_COMMENTS, DELETE_COMMENT
-} from "../actions/actions";
+import * as CommentActions from '../actions/comments.js';
 
 const initialState = {
     comments: []
@@ -9,19 +7,19 @@ const initialState = {
 
 function comments(state=initialState, action) {
     switch (action.type) {
-        case ADD_COMMENT:
+        case CommentActions.ADD_COMMENT:
             var comments = [...state['comments']];
             comments.push(action.comment);
             return {
                 ...state,
                 ['comments']: comments
             }
-        case GOT_COMMENTS:
+        case CommentActions.GOT_COMMENTS:
             return {
                 ...state,
                 ['comments']: action.comments
             }
-        case EDIT_COMMENT:
+        case CommentActions.EDIT_COMMENT:
             var comments = [...state['comments']];
 
             for (var i = 0; i < comments.length; i++) {
@@ -33,14 +31,14 @@ function comments(state=initialState, action) {
                 ...state,
                 ['comments']: comments
             }
-        case DELETE_COMMENT:
+        case CommentActions.DELETE_COMMENT:
             return {
                 ...state,
                 ['comments']: _.reject(state['comments'], (c) => {
                     return action.comment.id === c.id;
                 })
             }
-        case SORT_COMMENTS:
+        case CommentActions.SORT_COMMENTS:
             comments = [...state['comments']];
             comments.sort((a, b) => {
                 switch (action.sortType) {
