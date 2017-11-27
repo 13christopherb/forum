@@ -8,6 +8,10 @@ class PostBody extends React.Component {
         this.props.editingPost();
     }
 
+    deletePost = (e) => {
+        this.props.deletePost();
+    }
+
     render() {
         return (
             <div>

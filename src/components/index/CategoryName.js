@@ -5,7 +5,7 @@ class CategoryName extends React.Component {
     render() {
         return (
             <Link className="btn btn-primary"
-                to={"/c/" + this.props.category.path}
+                to={'/' + this.props.category.path}
             >{this.props.category.name}</Link>
         )
     }

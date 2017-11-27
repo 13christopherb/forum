@@ -14,9 +14,9 @@ class App extends Component {
             <div className="container-fluid">
                 <Header />
                 <Route exact path="/" component={Posts}/>
-                <Route exact path="/c/:category" component={Posts}/>
+                <Route exact path="/:category" component={Posts}/>
                 <Route exact path="/new" component={NewPost}/>
-                <Route exact path="/c/:category/:id/:edit?" component={Post}/>
+                <Route exact path="/:category/:id/:edit?" component={Post}/>
                 <Route exact path="/404" component={NotFound}/>
             </div>
         );

@@ -18,13 +18,13 @@ class PostTitle extends React.Component {
                 </td>
                 <td>
                     <Link
-                        to={'/c/' + this.props.post.category + '/' + this.props.post.id}
+                        to={'/' + this.props.post.category + '/' + this.props.post.id}
                     ><h4>{this.props.post.title}</h4></Link>
                     {/* Info/options links */}
                     <p><
                         small>{this.props.post.commentCount + ' comments | '}</small>
                         <Link
-                            to={'/c/' + this.props.post.category + '/' + this.props.post.id + '/' + 'edit'}
+                            to={'/' + this.props.post.category + '/' + this.props.post.id + '/' + 'edit'}
                         ><small>Edit Post</small></Link>
                         <small> | </small>
                         <small>{moment(this.props.post.timestamp, 'x').from(Date.now())}</small>

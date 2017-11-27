@@ -97,7 +97,7 @@ class Post extends React.Component {
         this.props.post ? post = this.props.post : post = {};
         return (
             <div>
-                <Route path="/c/:category/:id/:edit?" render={() => (
+                <Route path="/:category/:id/:edit?" render={() => (
                     this.state.deleted ? (
                         <Redirect to="/"/>
                     ) : (
@@ -108,7 +108,8 @@ class Post extends React.Component {
                                 <div>
                                     {!this.state.editing ? (
                                         <div>
-                                            <PostBody editingPost={this.editingPost} post={post}/>
+                                            <PostBody editingPost={this.editingPost} deletePost={this.deletePost}
+                                                      post={post}/>
                                             {/* Comment input field */}
                                             <section className="row">
                                                 <div className="col-md-12">
