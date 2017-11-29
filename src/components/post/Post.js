@@ -91,6 +91,7 @@ class Post extends React.Component {
                                         <div>
                                             <PostBody editingPost={this.editingPost} deletePost={this.deletePost}
                                                       post={post}/>
+                                            <h5>New Comment</h5>
                                             <NewComment parentId={this.props.post.id}/>
 
                                         </div>

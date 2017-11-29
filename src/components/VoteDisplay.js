@@ -47,7 +47,7 @@ class VoteDisplay extends React.Component {
                 delVoteScore = -1;
                 voteResult = 'downVote';
                 voteValue = -1;
-            } else {                                //If the user has already upvoted this post
+            } else {                                //If the user has alread upvoted this post
                 delVoteScore = -2;
                 voteResult = 'downVote';
                 voteValue = -1;
@@ -76,7 +76,7 @@ class VoteDisplay extends React.Component {
                             voteValue={this.state.voteValue}
                             handleVote={this.handleVote}/>
                 {this.props.post.voteScore}
-                <VoteButton value="downVote" type={this.props.type}
+                <VoteButton vue="downVote" type={this.props.type}
                             voteValue={this.state.voteValue}
                             handleVote={this.handleVote}/>
             </div>

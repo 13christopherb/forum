@@ -6,7 +6,8 @@ import VoteDisplay from '../VoteDisplay.js';
 
 class PostTitle extends React.Component {
 
-    deletePost = () => {
+    deletePost = (e) => {
+        e.preventDefault();
         this.props.deletePost(this);
     }
 
@@ -21,13 +22,14 @@ class PostTitle extends React.Component {
                         to={'/' + this.props.post.category + '/' + this.props.post.id}
                     ><h4>{this.props.post.title}</h4></Link>
                     {/* Info/options links */}
-                    <p><
-                        small>{this.props.post.commentCount + ' comments | '}</small>
+                    <p><small>{this.props.post.commentCount + ' comments | '}</small>
+                        <small>{moment(this.props.post.timestamp, 'x').from(Date.now())}</small>
+                        <small> | </small>
                         <Link
                             to={'/' + this.props.post.category + '/' + this.props.post.id + '/' + 'edit'}
                         ><small>Edit Post</small></Link>
                         <small> | </small>
-                        <small>{moment(this.props.post.timestamp, 'x').from(Date.now())}</small>
+                        <a href="#" onClick={this.deletePost}><small>Delete</small></a>
                     </p>
                 </td>
                 <td>
@@ -37,11 +39,6 @@ class PostTitle extends React.Component {
                 </td>
                 <td>
                     {this.props.post.category}
-                </td>
-                <td>
-                    <button className="btn btn-danger" onClick={this.deletePost}>
-                        <i className="fa fa-trash"/> Delete
-                    </button>
                 </td>
             </tr>
         )

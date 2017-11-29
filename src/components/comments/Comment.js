@@ -18,6 +18,7 @@ class Comment extends React.Component {
      * @param e Onclick event
      */
     delete = (e) => {
+        e.preventDefault();
         if (!this.state.deleting) {
             this.setState({
                 deleting: true
@@ -82,12 +83,14 @@ class Comment extends React.Component {
                                 <form onSubmit={this.handleSubmit}>
                                         <textarea
                                             name="body"
+                                            className="form-control"
                                             value={this.state.body} onChange={this.handleInputChange}></textarea>
                                     <button className="btn btn-sm btn-primary" type="submit">Submit</button>
                                     <button className="btn btn-sm btn-primary" onClick={this.editing}>Cancel</button>
                                 </form>
                             )}
                             <a href="#" className="comment-link" onClick={this.editing}>Edit</a>
+                            <span>|</span>
                             {!this.state.deleting ? (
                             <a href="#" className="comment-link" onClick={this.delete}>Delete</a>
                             ) : (
