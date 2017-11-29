@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {Route, Redirect} from 'react-router';
-import uuidv4 from 'uuid';
 import * as PostActions from '../../actions/posts.js';
 import * as CommentActions from '../../actions/comments.js';
 import Comment from '../comments/Comment.js';
@@ -8,7 +7,8 @@ import EditPost from './EditPost.js';
 import PostBody from './PostBody.js';
 import _ from 'underscore';
 import {connect} from 'react-redux';
-import NotFound from "../NotFound";
+import NotFound from '../NotFound';
+import NewComment from '../comments/NewComment.js';
 import Header from '../Header.js';
 
 
@@ -41,30 +41,6 @@ class Post extends React.Component {
         this.setState({editing: !this.state.editing})
     }
 
-    handleCommentChange = (e) => {
-        const target = e.target;
-        const value = target.value;
-        const name = target.name;
-        this.setState({
-            [name]: value
-        })
-    }
-
-    handleCommentSubmit = (e) => {
-        e.preventDefault();
-        const comment = {
-            id: uuidv4(),
-            author: this.state.commentAuthor,
-            body: this.state.commentBody,
-            parentId: this.props.post.id,
-            voteScore: 1,
-        };
-        this.props.dispatch(CommentActions.postComment(comment));
-        this.setState({
-            commentAuthor: '',
-            commentBody: '',
-        })
-    }
 
     deletePost = () => {
         this.props.dispatch(PostActions.deletePost(this.props.post));
@@ -115,28 +91,8 @@ class Post extends React.Component {
                                         <div>
                                             <PostBody editingPost={this.editingPost} deletePost={this.deletePost}
                                                       post={post}/>
-                                            {/* Comment input field */}
-                                            <section className="row">
-                                                <div className="col-md-12">
-                                                    <form onSubmit={this.handleCommentSubmit}>
-                                                        <label>
-                                                            Comment
-                                                            <textarea
-                                                                name="commentBody"
-                                                                value={this.state.commentBody}
-                                                                onChange={this.handleCommentChange}></textarea>
-                                                        </label>
-                                                        <label>
-                                                            Author
-                                                            <input
-                                                                name="commentAuthor"
-                                                                value={this.state.commentAuthor}
-                                                                onChange={this.handleCommentChange}/>
-                                                        </label>
-                                                        <button type="submit">Submit</button>
-                                                    </form>
-                                                </div>
-                                            </section>
+                                            <NewComment parentId={this.props.post.id}/>
+
                                         </div>
                                     ) : (
                                         <div>

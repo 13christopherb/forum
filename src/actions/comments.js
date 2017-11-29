@@ -17,6 +17,7 @@ export function addComment(comment) {
 export const postComment = (comment) => dispatch => {
     ForumAPI.addComment(comment).then(res => {
         dispatch(addComment(comment));
+        dispatch(sortComments('top'));
     });
 }
 

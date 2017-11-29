@@ -6,7 +6,7 @@
 ```
 git clone https://github.com/13christopherb/forum
 cd bookshelf
-npm forum
+npm start
 ```
 
 ### Install and run server
