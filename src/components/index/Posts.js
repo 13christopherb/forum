@@ -5,6 +5,7 @@ import * as actions from '../../actions/actions';
 import * as PostActions from '../../actions/posts.js';
 import PostTitle from './PostTitle.js';
 import CategoryName from './CategoryName.js';
+import Header from '../Header.js';
 
 class Posts extends React.Component {
 
@@ -48,6 +49,7 @@ class Posts extends React.Component {
         }
         return (
             <div>
+                <Header category={this.props.category}/>
                 <div className="row">
                     <div className="col-md-3">
                         <select onChange={this.sort}>

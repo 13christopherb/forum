@@ -64,7 +64,6 @@ function posts(state=initialState, action) {
                         return 0;
                 }
             });
-            console.log(state);
             return {
                 ...state,
                 posts: posts

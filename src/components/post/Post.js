@@ -9,6 +9,7 @@ import PostBody from './PostBody.js';
 import _ from 'underscore';
 import {connect} from 'react-redux';
 import NotFound from "../NotFound";
+import Header from '../Header.js';
 
 
 class Post extends React.Component {
@@ -106,6 +107,10 @@ class Post extends React.Component {
                                 <NotFound/>
                             ) : (
                                 <div>
+                                    <Header category={this.props.post.category}
+                                            title={this.props.post.title}
+                                            id={this.props.post.id}
+                                    />
                                     {!this.state.editing ? (
                                         <div>
                                             <PostBody editingPost={this.editingPost} deletePost={this.deletePost}
@@ -164,7 +169,9 @@ class Post extends React.Component {
 
 function mapStateToProps({posts, comments}, ownProps) {
     return {
-        post: posts.posts[0],
+        post: _.filter(posts.posts, (post) => {
+            return post.id === ownProps.match.params.id;
+        })[0],
         comments: comments.comments
     }
 }

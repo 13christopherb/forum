@@ -47,7 +47,7 @@ class VoteDisplay extends React.Component {
                 delVoteScore = -1;
                 voteResult = 'downVote';
                 voteValue = -1;
-            } else {                                //If the user has alread upvoted this post
+            } else {                                //If the user has already upvoted this post
                 delVoteScore = -2;
                 voteResult = 'downVote';
                 voteValue = -1;
